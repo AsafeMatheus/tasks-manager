@@ -9,6 +9,7 @@ import {
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
@@ -22,12 +23,14 @@ import { styles } from "./styles"
 
 export function CreateAgenda(){
     const navigation = useNavigation()
+    const currentMoment = new Date()
 
     const [title, setTitle] = useState('')
     const [day, setDay] = useState('')
     const [month, setMonth] = useState('')
     const [place, setPlace] = useState('')
     const [hour, setHour] = useState('')
+    const [minute, setMinute] = useState('')
     const [remember, setRemember] = useState(false)
     const [color, setColor] = useState('#FFFF00')
 
@@ -38,6 +41,26 @@ export function CreateAgenda(){
     }
 
     const handleAgenda = () => {
+        navigation.navigate('Agenda')
+    }
+
+    const addAgenda = () => {
+        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        .doc('agendas')
+        .collection('agendas-list')
+        .add({
+            title,
+            hour,
+            minute,
+            place,
+            remember,
+            color,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            day,
+            month,
+            year: currentMoment.getFullYear()
+        })
+
         navigation.navigate('Agenda')
     }
     
@@ -73,9 +96,9 @@ export function CreateAgenda(){
                     <View>
                         <Text style={styles.title}>Horário:</Text>
                         <View style={styles.smallInputs}>
-                            <SmallInput set={setDay} />
+                            <SmallInput set={setHour} />
                             <Text style={styles.separator}>:</Text>
-                            <SmallInput set={setMonth} />
+                            <SmallInput set={setMinute} />
                         </View>
                     </View>
                 </View>
@@ -114,7 +137,7 @@ export function CreateAgenda(){
             <View style={styles.footer}>
                 <Button
                     title='Confirmar'
-                    onPress={handleAgenda}
+                    onPress={addAgenda}
                 />
             </View>
 

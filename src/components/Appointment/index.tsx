@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { 
     View, 
     Text, 
@@ -13,11 +13,14 @@ import { styles } from "./styles"
 export type AgendaProps = {
     id: string
     title: string,
-    date: string,
     hour: string,
     place: string,
     remember: boolean,
-    background: string
+    color: string,
+    day: string,
+    month: string,
+    minute: string,
+    year: string
 }
 
 type Props = TouchableOpacityProps & {
@@ -25,17 +28,20 @@ type Props = TouchableOpacityProps & {
 }
 
 export function Appointment({ data, ...rest } : Props){
+    const [date, setDate] = useState(data.day + '/' + data.month + '/' + data.year)
+    const [hour, setHour] = useState(data.hour + ':' + data.minute)
+
     return(
         <TouchableOpacity 
-            style={[styles.container, {backgroundColor: data.background}]}
+            style={[styles.container, {backgroundColor: data.color}]}
             activeOpacity={0.5}
             {...rest}
         >
             <Text style={styles.title}>{data.title}</Text>
 
             <View style={styles.content}>
-                <Text style={styles.information}>Data: {data.date}</Text>
-                <Text style={styles.information}>Horário: {data.hour}</Text>
+                <Text style={styles.information}>Data: {date}</Text>
+                <Text style={styles.information}>Horário: {hour}</Text>
             </View>
 
             <View style={styles.content}>

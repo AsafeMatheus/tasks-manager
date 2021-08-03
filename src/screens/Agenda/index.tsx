@@ -7,6 +7,7 @@ import {
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { Appointment } from "../../components/Appointment"
 import { Header } from "../../components/Header"
@@ -17,27 +18,8 @@ import { styles } from "./styles"
 export function Agenda(){
     const navigation = useNavigation()
 
-    const backAction = () => {
-        navigation.goBack()
-        return true
-    }
-
-    /*useEffect(() => {
-        //if (navigation.isFocused())
-
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            backAction
-        )
-
-        return () => BackHandler.removeEventListener(
-            "hardwareBackPress",
-            backAction
-        )
-    }, [backAction])*/
-
     const [events, setEvents] = useState([
-        {
+        /*{
             id: '1',
             title: 'Festa de despedida',
             date: '16/08/2021',
@@ -72,8 +54,25 @@ export function Agenda(){
             place: 'Brusque',
             remember: true,
             background: "#FFA5E8"
-        }
+        }*/
     ])
+
+    useEffect(() => {
+        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        .doc("agendas")
+        .collection('agendas-list')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((query) => {
+            const list : any = []
+
+            query.forEach((doc) => {
+                list.push({...doc.data(), id: doc.id})
+                console.log(doc.data())
+            })
+
+            setEvents(list)
+        })
+    }, [])
 
     return(
         <SafeAreaView style={styles.container}>
@@ -89,7 +88,8 @@ export function Agenda(){
                         <Appointment 
                             data={item} 
                             onPress={() => {
-                                navigation.navigate('EditAgenda')
+                                navigation.navigate('EditAgenda', {item})
+                                console.log(item)
                             }} 
                         />
                     )

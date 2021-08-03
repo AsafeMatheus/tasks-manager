@@ -5,10 +5,11 @@ import {
     KeyboardAvoidingView,
     Platform,
     Text,
-    TouchableOpacity 
+    TouchableOpacity,
+    Alert 
 } from "react-native"
 
-import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { PickColorModal } from "../../components/PickColorModal"
 import { InputWithLabel } from "../../components/InputWithLabel"
@@ -20,24 +21,70 @@ import { FontAwesome5 } from '@expo/vector-icons'
 
 import { styles } from "./styles"
 
-export function EditAgenda(){
-    const navigation = useNavigation()
+export function EditAgenda({ navigation, route } : any){
+    const data = route.params.item
 
-    const [title, setTitle] = useState('Festa de despedida')
-    const [day, setDay] = useState('16')
-    const [month, setMonth] = useState('08')
-    const [place, setPlace] = useState('Brusque')
-    const [hour, setHour] = useState('11')
-    const [minute, setMinute] = useState('21')
-    const [remember, setRemember] = useState(true)
-    const [color, setColor] = useState('#FFFF00')
+    const [title, setTitle] = useState(data.title)
+    const [day, setDay] = useState(data.day)
+    const [month, setMonth] = useState(data.month)
+    const [place, setPlace] = useState(data.place)
+    const [hour, setHour] = useState(data.hour)
+    const [minute, setMinute] = useState(data.minute)
+    const [remember, setRemember] = useState(data.remember)
+    const [color, setColor] = useState(data.color)
 
     const [colorModal, setColorModal] = useState(false)
+
+    const deleteAgenda = () => {
+        Alert.alert("Alerta!", `Deseja mesmo excluir isto de sua agenda`, [
+            {
+                text: "Não",
+                onPress: () => null,
+                style: "cancel"
+            },
+            { text: "Sim", onPress: () => {
+                    firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+                    .doc('agendas')
+                    .collection('agendas-list')
+                    .doc(data.id).delete()
+
+                    navigation.navigate('Agenda')
+                }
+            }
+        ])
+    }
+
+    const update = () => {
+        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        .doc('agendas')
+        .collection('agendas-list')
+        .doc(data.id).set({
+            title,
+            hour,
+            minute,
+            place,
+            remember,
+            color,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            day,
+            month
+        })
+
+        navigation.navigate('Agenda')
+    }
     
     return(
         <SafeAreaView style={styles.container}>
             <Header
                 title='Editar agenda'
+                action={
+                    <TouchableOpacity 
+                        activeOpacity={0.7}
+                        onPress={deleteAgenda}
+                    >
+                        <FontAwesome5 name="trash-alt" size={24} color="black" />
+                    </TouchableOpacity>
+                }
             />
 
             <KeyboardAvoidingView 
@@ -94,6 +141,7 @@ export function EditAgenda(){
                 onPress={() => setColorModal(true)}
             >
                 <View style={[styles.colorView, {backgroundColor: color}]} />
+
                 <View style={styles.colorPickerTextContainer}>
                     <Text style={styles.colorPickerText}>Escolher cor</Text>
                 </View>
@@ -121,7 +169,7 @@ export function EditAgenda(){
             <View style={styles.footer}>
                 <Button
                     title='Confirmar'
-                    onPress={() => navigation.goBack()}
+                    onPress={update}
                 />
             </View>
 
