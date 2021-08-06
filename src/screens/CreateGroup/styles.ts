@@ -9,12 +9,15 @@ export const styles = StyleSheet.create({
         paddingTop: getStatusBarHeight() + 26
     },
     footer:{
-    //    marginTop: 20
     },
     content:{
         paddingHorizontal: 24
     },
     ad:{
-        marginTop: 40
+        marginTop: -10,
+        marginBottom: 10
+    },
+    mark:{
+        marginTop: 35
     }
 })

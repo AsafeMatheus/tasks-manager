@@ -18,7 +18,7 @@ import { styles } from "./styles"
 setTestDeviceIDAsync('EMULATOR')
 
 export function Concluded(){
-    const [ finishedTasks, setFinishedTasks ] = useState([])
+    const [ finishedTasks, setFinishedTasks ] : any = useState([])
 
     useEffect(() => {
         firebase.firestore().collection(String(firebase.auth().currentUser?.uid))

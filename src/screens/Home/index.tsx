@@ -33,7 +33,7 @@ export function Home({ navigation, route } : any){
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
     const [newTask, setNewTask] = useState('')
-    const [tasks, setTasks] = useState([])
+    const [tasks, setTasks] : any = useState([])
 
     useEffect(() => {
         const today = new Date()

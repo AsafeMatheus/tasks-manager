@@ -69,8 +69,8 @@ export function SignUp({ navigation } : any){
 
             setLoading(true)
 
-            setTimeout( async () => {
-                await navigation.reset({
+            setTimeout(() => {
+                navigation.reset({
                     index: 0,
                     routes: [{ name: 'MainNavigation' }]
                 })

@@ -8,6 +8,7 @@ import {
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
+import firebase from "../../config/firebaseconfig"
 import * as ImagePicker from 'expo-image-picker'
 import {
     AdMobBanner,
@@ -15,6 +16,7 @@ import {
 } from 'expo-ads-admob'
 
 import { InputWithLabel } from "../../components/InputWithLabel"
+import { MarkOption } from "../../components/MarkOption"
 import { PickImage } from "../../components/PickImage"
 import { TextArea } from "../../components/TextArea"
 import { Header } from "../../components/Header"
@@ -27,9 +29,11 @@ setTestDeviceIDAsync('EMULATOR')
 export function CreateGroup(){
     const navigation = useNavigation()
 
-    const [name, setName] = useState('')
+    const [everybodyCanPost, setEverybodyCanPost] = useState(true)
     const [description, setDescription] = useState('')
+    const [imageUrl, setImageUrl] = useState('')
     const [image, setImage] = useState('')
+    const [name, setName] = useState('')
 
     useEffect(() => {
         (async () => {
@@ -42,16 +46,35 @@ export function CreateGroup(){
         })()
     }, [])
 
+    const addGroup = () => {
+        const reference = firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        .doc('groups')
+        .collection('my-groups')
+
+        reference.add({
+            name,
+            image,
+            description,
+            manager: firebase.auth().currentUser?.uid,
+            everybodyCanPost,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+
+        navigation.navigate('Grupos')
+    }
+
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [4, 3],
           quality: 1,
+          base64: true
         })
     
         if (!result.cancelled) {
-          setImage(result.uri)
+            setImage(String(result.base64))
+            setImageUrl(result.uri)
         }
     }
 
@@ -84,13 +107,24 @@ export function CreateGroup(){
                         set={setDescription}
                     />
                 </KeyboardAvoidingView>
+
                 <PickImage
-                    imageUrl={image}
+                    imageUrl={imageUrl}
                     onPress={() => pickImage()}
                 />
-            
+
+                <View style={styles.mark}>
+                    <MarkOption
+                        title={'Todos podem postar'}
+                        set={() => setEverybodyCanPost(!everybodyCanPost)}
+                        marked={everybodyCanPost}
+                        size={18}
+                        line={false}
+                    />
+                </View>
+
                 <AdMobBanner
-                    bannerSize="largeBanner"
+                    bannerSize="banner"
                     adUnitID="ca-app-pub-3940256099942544/6300978111" 
                     servePersonalizedAds 
                     onDidFailToReceiveAdWithError={(err) => console.log(err)}
@@ -101,7 +135,7 @@ export function CreateGroup(){
             <View style={[styles.footer, styles.content]}>
                 <Button
                     title='Confirmar'
-                    onPress={verification}
+                    onPress={addGroup}
                 />
             </View>
         </SafeAreaView>

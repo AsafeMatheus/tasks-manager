@@ -12,13 +12,19 @@ import { AntDesign } from '@expo/vector-icons'
 import { theme } from "../../global/styles/theme"
 import { styles } from "./styles"
 
-export function GroupTabBar(){
+type Props = {
+    name: string,
+    description: string,
+    image: string
+}
+
+export function GroupTabBar({name, description, image} : Props){
     const navigation = useNavigation()
 
     return(
         <View style={styles.container}>
             <ImageBackground
-                source={{uri: 'https://certificadocursosonline.com/wp-content/uploads/2017/09/curso-de-ingles-online-gratis-1280x720.jpg'}}
+                source={{uri: `data:image/jpeg;base64,${image}` }}
                 style={styles.image}
             >
                 <View style={styles.back}>
@@ -29,10 +35,10 @@ export function GroupTabBar(){
                 
                 <View style={styles.bannerContent}>
                     <Text style={styles.title}>
-                        Turma de inglês
+                        {name}
                     </Text>
                     <Text style={styles.description}>
-                        Eventos e trabalhos da turma número 8 do CCAA
+                        {description}
                     </Text>
                 </View>
             </ImageBackground>
