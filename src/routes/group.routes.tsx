@@ -36,6 +36,14 @@ export function GroupNavigation({navigation, route} : any){
         })
     }, [])
 
+    function GroupTasksComponent(){
+        return(
+            <GroupTasks 
+                groupId={groupId}
+            />
+        )
+    }
+
     return(
         <>
         <StatusBar barStyle='light-content' backgroundColor='transparent' translucent />
@@ -55,7 +63,7 @@ export function GroupNavigation({navigation, route} : any){
             >
                 <Screen
                     name='GroupTasks'
-                    component={GroupTasks}
+                    component={GroupTasksComponent}
                     options={{
                         tabBarLabel: 'Tarefas'
                     }}

@@ -47,7 +47,7 @@ export function SignUp({ navigation } : any){
           mediaTypes: ImagePicker.MediaTypeOptions.Images,
           allowsEditing: true,
           aspect: [4, 3],
-          quality: 0.1,
+          quality: 1,
           base64: true
         })
     

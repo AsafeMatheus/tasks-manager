@@ -1,18 +1,23 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { View, FlatList } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { GroupTask } from "../../components/GroupTask"
 import { Button } from "../../components/Button"
 
 import { styles } from "./styles"
 
-export function GroupTasks(){
+type Props = {
+    groupId: string
+}
+
+export function GroupTasks({ groupId } : Props){
     const navigation = useNavigation()
 
-    const [ tasks, setTasks ] = useState([
-        {
+    const [ tasks, setTasks ] : any = useState([
+        /*{
             id: '1',
             title: 'Fazer a maquete',
             date: '11/02/2021',
@@ -95,8 +100,27 @@ export function GroupTasks(){
                     image: 'https://www.github.com/isadorastan.png'
                 },
             ]
-        }
+        }*/
     ])
+
+    useEffect(() => {
+        const userId = String(firebase.auth().currentUser?.uid)
+
+        firebase.firestore().collection(userId)
+        .doc('groups')
+        .collection('my-groups')
+        .doc(groupId)
+        .collection('group-tasks')
+        .onSnapshot((doc) => {
+            let list : any = []
+
+            doc.forEach((query) => {
+                list.push({id: query.id, ...query.data()})
+            })
+
+            setTasks(list)
+        })
+    }, [])
 
     return(
         <View style={styles.container}>
@@ -124,7 +148,9 @@ export function GroupTasks(){
                 <Button 
                     title='Nova tarefa'
                     onPress={() => {
-                        navigation.navigate('CreateGroupTask')
+                        navigation.navigate('CreateGroupTask', {
+                            groupId
+                        })
                     }}
                 />
             </View>

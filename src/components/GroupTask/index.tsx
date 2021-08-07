@@ -23,7 +23,7 @@ type GroupTaskprops = {
     title: string,
     date: string,
     amountOfPeople: number,
-    members: Array<memberProps>
+    members?: Array<memberProps>
 }
 
 type Props = TouchableOpacityProps & {
@@ -42,11 +42,11 @@ export function GroupTask({ setPeople, data, ...rest } : Props){
                 activeOpacity={0.7}
             >
                 <Text style={styles.title}>
-                    {data.title}
+                    {data?.title}
                 </Text>
 
                 <Text style={styles.date}>
-                    Prazo: {data.date}
+                    Prazo: {data?.date}
                 </Text>
 
                 <FlatList 
@@ -65,6 +65,7 @@ export function GroupTask({ setPeople, data, ...rest } : Props){
             </TouchableOpacity>
 
             {
+                data.members ?
                 data.members.length < limit ?
                 <TouchableOpacity 
                     style={styles.handButton}
@@ -76,6 +77,7 @@ export function GroupTask({ setPeople, data, ...rest } : Props){
                 </TouchableOpacity>
                 :
                 <View />
+                : <View />
             }
         </View>
     )

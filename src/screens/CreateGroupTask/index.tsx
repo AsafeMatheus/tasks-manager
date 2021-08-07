@@ -9,7 +9,7 @@ import {
 } from "react-native"
 
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
-import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { InputWithLabel } from "../../components/InputWithLabel"
 import { Header } from "../../components/Header"
@@ -19,12 +19,29 @@ import { styles } from "./styles"
 
 setTestDeviceIDAsync('EMULATOR')
 
-export function CreateGroupTask(){
-    const navigation = useNavigation()
+export function CreateGroupTask({ navigation, route } : any){
+    const { groupId } = route.params
 
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
     const [amountOfPeople, setAmountOfPeople] = useState(0)
+
+    const addTask = () => {
+        const userId = String(firebase.auth().currentUser?.uid)
+
+        firebase.firestore().collection(userId)
+        .doc('groups')
+        .collection('my-groups')
+        .doc(groupId)
+        .collection('group-tasks')
+        .add({
+            title,
+            date,
+            amountOfPeople
+        })
+
+        navigation.navigate('GroupNavigation', { groupId })
+    }
 
     const verification = () => {
         let titleLength = title.length
@@ -77,7 +94,7 @@ export function CreateGroupTask(){
             <View style={styles.footer}>
                 <Button
                     title='Confirmar'
-                    onPress={verification}
+                    onPress={ addTask }
                 />
             </View>
         </SafeAreaView>
