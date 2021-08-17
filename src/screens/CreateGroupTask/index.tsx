@@ -29,15 +29,17 @@ export function CreateGroupTask({ navigation, route } : any){
     const addTask = () => {
         const userId = String(firebase.auth().currentUser?.uid)
 
-        firebase.firestore().collection(userId)
+        const ref = firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
         .doc(groupId)
-        .collection('group-tasks')
+        
+        ref.collection('group-tasks')
         .add({
             title,
             date,
-            amountOfPeople
+            amountOfPeople,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
 
         navigation.navigate('GroupNavigation', { groupId })

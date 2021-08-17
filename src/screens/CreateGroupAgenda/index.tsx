@@ -8,7 +8,9 @@ import {
     TouchableOpacity,
     StatusBar 
 } from "react-native"
+
 import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { FontAwesome5 } from '@expo/vector-icons'
 
@@ -20,7 +22,9 @@ import { Header } from "../../components/Header"
 
 import { styles } from "./styles"
 
-export function CreateGroupAgenda(){
+export function CreateGroupAgenda({route} : any){
+    const {groupId, groupCreator} = route.params
+
     const navigation = useNavigation()
 
     const [title, setTitle] = useState('')
@@ -33,6 +37,25 @@ export function CreateGroupAgenda(){
 
     const [colorModal, setColorModal] = useState(false)
     
+    const addGroupAgenda = () => {
+        firebase.firestore().collection(groupCreator)
+        .doc('groups')
+        .collection('my-groups')
+        .doc(groupId)
+        .collection('agendas')
+        .add({
+            title,
+            day,
+            month,
+            place,
+            hour,
+            remember,
+            color
+        })
+
+        navigation.navigate('GroupAgenda')
+    }
+
     return(
         <>
         <StatusBar barStyle='dark-content' backgroundColor='transparent' translucent />
@@ -109,7 +132,7 @@ export function CreateGroupAgenda(){
                 <Button
                     title='Confirmar'
                     onPress={() => {
-                        navigation.navigate('GroupAgenda')
+                        addGroupAgenda()
                     }}
                 />
             </View>

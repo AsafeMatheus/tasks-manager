@@ -47,7 +47,8 @@ export function Home({ navigation, route } : any){
             setGreeting('Boa noite,')
         }
 
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid)).doc("profile-image")
+        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        .doc("profile-image")
         .onSnapshot((doc) => {
             let data =  doc.data()
             setImage(data?.avatar)

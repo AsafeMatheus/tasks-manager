@@ -60,15 +60,19 @@ export function Groups(){
         .collection('my-groups')
         .orderBy('timestamp', 'desc')
 
-        reference.onSnapshot((doc) => {
-            let list: any = []
+        const mainFunction = () => {
+            reference.onSnapshot((doc) => {
+                let list: any = []
 
-            doc.forEach((item) => {
-                list.push({id: item.id, ...item.data()})
+                doc.forEach((item) => {
+                    list.push({id: item.id, ...item.data()})
+                })
+
+                setGroups(list)
             })
+        }
 
-            setGroups(list)
-        })
+        return mainFunction()
 
     }, [])
 
@@ -95,7 +99,8 @@ export function Groups(){
                             }}
                             onPress={() => {
                                 navigation.navigate('GroupNavigation', {
-                                    groupId: item.id
+                                    groupId: item.id,
+                                    creatorId: item.creator
                                 })
                             }}
                         />

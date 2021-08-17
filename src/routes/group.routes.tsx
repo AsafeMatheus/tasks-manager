@@ -16,30 +16,44 @@ import { theme } from "../global/styles/theme"
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 
 export function GroupNavigation({navigation, route} : any){
-    const { groupId } = route.params
+    const { groupId, creatorId } = route.params
 
     const [description, setDescription] = useState('')
     const [image, setImage] = useState('')
     const [name, setName] = useState('')
     
     useEffect(() => {
-        const userId = String(firebase.auth().currentUser?.uid)
-        const reference = firebase.firestore().collection(userId)
-        .doc('groups')
-        .collection('my-groups')
-        .doc(groupId)
+        const mainFunction = () => {
+            const reference = firebase.firestore().collection(creatorId)
+            .doc('groups')
+            .collection('my-groups')
+            .doc(groupId)
 
-        reference.get().then(doc => {
-            setDescription(doc.data()?.description)
-            setImage(doc.data()?.image)
-            setName(doc.data()?.name)
-        })
+            reference.get().then(doc => {   
+                setDescription(doc.data()?.description)
+                setImage(doc.data()?.image)
+                setName(doc.data()?.name)
+            }).catch((err) => console.log(err))
+        } 
+
+        return mainFunction()
+        
     }, [])
 
     function GroupTasksComponent(){
         return(
             <GroupTasks 
                 groupId={groupId}
+                groupCreator={creatorId}
+            />
+        )
+    }
+
+    function GroupAgendaComponent(){
+        return(
+            <GroupAgenda 
+                groupId={groupId}
+                groupCreator={creatorId}
             />
         )
     }
@@ -70,7 +84,7 @@ export function GroupNavigation({navigation, route} : any){
                 />
                 <Screen
                     name='GroupAgenda'
-                    component={GroupAgenda}
+                    component={GroupAgendaComponent}
                     options={{
                         tabBarLabel: 'Agenda'
                     }}

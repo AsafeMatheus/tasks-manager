@@ -10,117 +10,83 @@ import { Button } from "../../components/Button"
 import { styles } from "./styles"
 
 type Props = {
-    groupId: string
+    groupId: string,
+    groupCreator: string
 }
 
-export function GroupTasks({ groupId } : Props){
+export function GroupTasks({ groupId, groupCreator } : Props){
     const navigation = useNavigation()
 
-    const [ tasks, setTasks ] : any = useState([
-        /*{
-            id: '1',
-            title: 'Fazer a maquete',
-            date: '11/02/2021',
-            amountOfPeople: 5,
-            members:[
-                {
-                    id: '1', 
-                    username: 'Asafe', 
-                    image: 'https://www.github.com/AsafeMatheus.png'
-                },
-                {
-                    id: '2', 
-                    username: 'Renam', 
-                    image: 'https://www.github.com/r3nanp.png'
-                },
-                {
-                    id: '3',
-                    username: 'Ilda',
-                    image: 'https://www.github.com/ildaneta.png'
-                },
-                {
-                    id: '4',
-                    username: 'Ika',
-                    image: 'https://www.github.com/ikatyang.png'
-                }
-            ]
-        },
-        {
-            id: '2',
-            title: 'Fazer o cartaz',
-            date: '11/02/2021',
-            amountOfPeople: 2,
-            members:[
-                {
-                    id: '1', 
-                    username: 'Filipe Deschamps', 
-                    image: 'https://www.github.com/filipedeschamps.png'
-                },
-                {
-                    id: '2',
-                    username: 'Gilherme',
-                    image: 'https://www.github.com/koenpunt.png'
-                }
-            ]
-        },
-        {
-            id: '3',
-            title: 'Decoração',
-            date: '11/02/2021',
-            amountOfPeople: 8,
-            members:[
-                {
-                    id: '1', 
-                    username: 'Aline Bastos', 
-                    image: 'https://www.github.com/alinebastos.png'
-                },
-                {
-                    id: '2', 
-                    username: 'Borda', 
-                    image: 'https://www.github.com/Borda.png'
-                },
-                {
-                    id: '3', 
-                    username: 'Guillaume Gomez', 
-                    image: 'https://www.github.com/GuillaumeGomez.png'
-                },
-                {
-                    id: '4', 
-                    username: 'Izabella Silveira', 
-                    image: 'https://www.github.com/bella-silveira.png'
-                },
-                {
-                    id: '5', 
-                    username: 'Ana Laura', 
-                    image: 'https://www.github.com/isabellalealx.png'
-                },
-                {
-                    id: '6', 
-                    username: 'Biatrizs', 
-                    image: 'https://www.github.com/isadorastan.png'
-                },
-            ]
-        }*/
-    ])
+    const [taskMembersList, setTaskMebersList] : any = useState([])
+    const [userImage, setUserImage] = useState('')
+
+    const [ tasks, setTasks ] : any = useState([])
+
+    const userId = String(firebase.auth().currentUser?.uid)
+    const username = String(firebase.auth().currentUser?.displayName)
+
+    const ref = firebase.firestore().collection(groupCreator)
+    .doc('groups')
+    .collection('my-groups')
+    .doc(groupId)
 
     useEffect(() => {
-        const userId = String(firebase.auth().currentUser?.uid)
-
-        firebase.firestore().collection(userId)
-        .doc('groups')
-        .collection('my-groups')
-        .doc(groupId)
-        .collection('group-tasks')
-        .onSnapshot((doc) => {
+        ref.collection('group-tasks')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((task) => {
             let list : any = []
 
-            doc.forEach((query) => {
-                list.push({id: query.id, ...query.data()})
+            task.forEach((taskDoc) => {
+                const membersList : any = []
+
+                ref.collection('group-tasks')
+                .doc(taskDoc.id)
+                .collection('task-members')
+                .onSnapshot((members: any) => {
+                    
+                    members.forEach((member : any) => {
+                        firebase.firestore().collection(member.data().userId)
+                        .doc('profile-image')
+                        .onSnapshot((memberDoc) => {
+                            let memberImage = memberDoc.data()?.avatar
+                            let memberName = member.data()?.username
+                            let memberId = member?.id
+
+                            membersList.push({
+                                image: memberImage,
+                                username: memberName,
+                                id: memberId
+                            })
+                        })  
+                    })
+                })
+
+                list.push({
+                    id: taskDoc.id, 
+                    ...taskDoc.data(),
+                    members: membersList
+                })
             })
 
             setTasks(list)
         })
+        
+        firebase.firestore().collection(userId)
+        .doc('profile-image')
+        .onSnapshot((doc) => {
+            setUserImage(String(doc.data()?.avatar))
+        })
     }, [])
+
+    const participate = (index : string) => {
+        ref.collection('group-tasks')
+        .doc(index)
+        .collection('task-members')
+        .add({
+            userId,
+            username
+        })
+    }
 
     return(
         <View style={styles.container}>
@@ -131,6 +97,7 @@ export function GroupTasks({ groupId } : Props){
                     return(
                         <GroupTask
                             data={item}
+                            participateFunction={() => participate(item.id)} 
                             onPress={() => {
                                 navigation.navigate('TaskMembers', {
                                     data: item.members,

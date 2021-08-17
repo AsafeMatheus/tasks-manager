@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { 
     TouchableOpacity, 
     View, 
@@ -7,6 +7,8 @@ import {
     FlatList,
     Image 
 } from "react-native"
+
+import firebase from '../../config/firebaseconfig'
 
 import { Ionicons } from '@expo/vector-icons'
 
@@ -23,23 +25,37 @@ type GroupTaskprops = {
     title: string,
     date: string,
     amountOfPeople: number,
-    members?: Array<memberProps>
+    members: Array<memberProps>
+    groupId: string,
+    timestamp: string
 }
 
 type Props = TouchableOpacityProps & {
     data: GroupTaskprops,
-    setPeople?: () => void
+    setPeople?: () => void,
+    participateFunction: any
 }
 
-export function GroupTask({ setPeople, data, ...rest } : Props){
+export function GroupTask(
+    {
+        setPeople,
+        data,
+        participateFunction,
+        ...rest
+    } 
+    : Props
+    ){
+    const [participateButton, setParticipateButon] = useState(true)
+
     const limit = data.amountOfPeople
 
     return(
         <View style={styles.container}>
             <TouchableOpacity
-                {...rest}
+                //{...rest}
                 style={styles.content}
                 activeOpacity={0.7}
+                onPress={() => console.log(data.members)}
             >
                 <Text style={styles.title}>
                     {data?.title}
@@ -56,7 +72,7 @@ export function GroupTask({ setPeople, data, ...rest } : Props){
                         return(
                             <Image 
                                 style={styles.memberImage}
-                                source={{ uri: item.image }}  
+                                source={{ uri: `data:image/jpeg;base64,${item.image}` }}  
                             />
                         )
                     }}
@@ -65,10 +81,10 @@ export function GroupTask({ setPeople, data, ...rest } : Props){
             </TouchableOpacity>
 
             {
-                data.members ?
-                data.members.length < limit ?
+                data.members.length < limit && participateButton ?
                 <TouchableOpacity 
                     style={styles.handButton}
+                    onPress={participateFunction}
                 >
                     <Ionicons name="hand-right-outline" size={40} color="black" />
                     <Text style={styles.participate}>
@@ -77,7 +93,6 @@ export function GroupTask({ setPeople, data, ...rest } : Props){
                 </TouchableOpacity>
                 :
                 <View />
-                : <View />
             }
         </View>
     )

@@ -55,7 +55,7 @@ export function CreateGroup(){
             name,
             image,
             description,
-            manager: firebase.auth().currentUser?.uid,
+            creator: firebase.auth().currentUser?.uid,
             everybodyCanPost,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
