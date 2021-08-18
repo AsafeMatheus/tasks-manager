@@ -49,10 +49,10 @@ export function GroupAgenda({ groupId, groupCreator } : Props){
                 renderItem={({item}) => {
                     return (
                         <Appointment 
-                            data={item} 
+                            data={item}
                             onPress={() => {
-                                navigation.navigate('EditAgenda')
-                            }} 
+                                navigation.navigate('EditAgenda', { item })
+                            }}
                         />
                     )
                 }}

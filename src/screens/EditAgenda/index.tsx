@@ -33,6 +33,7 @@ export function EditAgenda({ navigation, route } : any){
     const [remember, setRemember] = useState(data.remember)
     const [color, setColor] = useState(data.color)
 
+    const userId = String(firebase.auth().currentUser?.uid)
     const [colorModal, setColorModal] = useState(false)
 
     const deleteAgenda = () => {
@@ -43,34 +44,69 @@ export function EditAgenda({ navigation, route } : any){
                 style: "cancel"
             },
             { text: "Sim", onPress: () => {
-                    firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-                    .doc('agendas')
-                    .collection('agendas-list')
-                    .doc(data.id).delete()
+                    if (data.groupAgenda){
+                        firebase.firestore().collection(data.groupCreator)
+                        .doc('groups')
+                        .collection('my-groups')
+                        .doc(data.groupId)
+                        .collection('agendas')
+                        .doc(data.id).delete()
 
-                    navigation.navigate('Agenda')
+                        navigation.navigate('GroupAgenda')
+                    } else{
+                        firebase.firestore().collection(userId)
+                        .doc('agendas')
+                        .collection('agendas-list')
+                        .doc(data.id).delete()
+
+                        navigation.navigate('Agenda')
+                    }
                 }
             }
         ])
     }
 
     const update = () => {
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-        .doc('agendas')
-        .collection('agendas-list')
-        .doc(data.id).set({
-            title,
-            hour,
-            minute,
-            place,
-            remember,
-            color,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            day,
-            month
-        })
+        if (data.groupAgenda){
+            firebase.firestore().collection(data.groupCreator)
+            .doc('groups')
+            .collection('my-groups')
+            .doc(data.groupId)
+            .collection('agendas')
+            .doc(data.id).set({
+                title,
+                day,
+                month,
+                place,
+                hour,
+                remember,
+                color,
+                groupAgenda: true,
+                groupCreator: data.groupCreator,
+                groupId: data.groupId,
+                minute: data.minute,
+                year: data.year
+            })
 
-        navigation.navigate('Agenda')
+            navigation.navigate('GroupAgenda')
+        } else {
+            firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+            .doc('agendas')
+            .collection('agendas-list')
+            .doc(data.id).set({
+                title,
+                hour,
+                minute,
+                place,
+                remember,
+                color,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                day,
+                month
+            })
+
+            navigation.navigate('Agenda')
+        }
     }
     
     return(

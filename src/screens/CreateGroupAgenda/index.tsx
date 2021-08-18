@@ -27,11 +27,14 @@ export function CreateGroupAgenda({route} : any){
 
     const navigation = useNavigation()
 
+    const currentTime = new Date()
+
     const [title, setTitle] = useState('')
     const [day, setDay] = useState('')
     const [month, setMonth] = useState('')
     const [place, setPlace] = useState('')
     const [hour, setHour] = useState('')
+    const [minute, setMinute] = useState('')
     const [remember, setRemember] = useState(false)
     const [color, setColor] = useState('#FFFF00')
 
@@ -49,8 +52,13 @@ export function CreateGroupAgenda({route} : any){
             month,
             place,
             hour,
+            minute,
             remember,
-            color
+            color,
+            groupAgenda: true,
+            groupCreator,
+            groupId,
+            year: currentTime.getFullYear()
         })
 
         navigation.navigate('GroupAgenda')
@@ -90,9 +98,9 @@ export function CreateGroupAgenda({route} : any){
                     <View>
                         <Text style={styles.title}>Horário:</Text>
                         <View style={styles.smallInputs}>
-                            <SmallInput set={setDay} />
+                            <SmallInput set={setHour} />
                             <Text style={styles.separator}>:</Text>
-                            <SmallInput set={setMonth} />
+                            <SmallInput set={setMinute} />
                         </View>
                     </View>
                 </View>
