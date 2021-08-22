@@ -5,7 +5,6 @@ import {
     TextInput,
     FlatList,
     Image,
-    Alert,
     Text,
     View
 } from "react-native"
@@ -24,7 +23,7 @@ import { styles } from "./styles"
 
 export function Home({ navigation, route } : any){  
     const [image, setImage] = useState('')  
-    const [username, setUserName] = useState('')
+    const [username, setUsername] = useState('')
 
     const [greeting, setGreeting] = useState('Hello')
 
@@ -32,8 +31,8 @@ export function Home({ navigation, route } : any){
     const [finishedModalVisible, setFinishedModalVisible] = useState(false)
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
-    const [newTask, setNewTask] = useState('')
     const [tasks, setTasks] : any = useState([])
+    const [newTask, setNewTask] = useState('')
 
     useEffect(() => {
         const today = new Date()
@@ -54,7 +53,7 @@ export function Home({ navigation, route } : any){
             setImage(data?.avatar)
         })
 
-        setUserName(String(firebase.auth().currentUser?.displayName))
+        setUsername(String(firebase.auth().currentUser?.displayName))
 
         firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
         .doc("tasks")
@@ -64,7 +63,7 @@ export function Home({ navigation, route } : any){
             const list : any = []
 
             query.forEach((doc) => {
-                list.push({...doc.data(), id: doc.id})
+                list.push({ id: doc.id, ...doc.data() })
             })
 
             setTasks(list)

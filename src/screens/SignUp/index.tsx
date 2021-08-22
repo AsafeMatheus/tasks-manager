@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
+    ActivityIndicator,
     SafeAreaView,
     Platform, 
-    Text, 
-    View,
     Alert,
-    ActivityIndicator 
+    Text, 
+    View
 } from "react-native"
 
 import * as ImagePicker from 'expo-image-picker'
 import firebase from '../../config/firebaseconfig'
-import 'firebase/auth'
 import 'firebase/storage'
+import 'firebase/auth'
 
 import { InputWithLabel } from "../../components/InputWithLabel"
 import { PickImage } from "../../components/PickImage"
@@ -27,9 +27,9 @@ export function SignUp({ navigation } : any){
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [imageUrl, setImageUrl] = useState('')
     const [email, setEmail] = useState('')
     const [image, setImage] = useState('')
-    const [imageUrl, setImageUrl] = useState('')
 
     useEffect(() => {
         (async () => {
@@ -69,8 +69,8 @@ export function SignUp({ navigation } : any){
 
             setLoading(true)
 
-            setTimeout(() => {
-                navigation.reset({
+            setTimeout(async () => {
+                await navigation.reset({
                     index: 0,
                     routes: [{ name: 'MainNavigation' }]
                 })

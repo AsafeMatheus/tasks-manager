@@ -1,11 +1,16 @@
-import React from "react"
+import React, { useState } from "react"
 import { 
     View, 
     Text, 
-    Image, 
+    Image,
+    Clipboard,
     TouchableOpacity, 
-    TouchableOpacityProps 
+    TouchableOpacityProps
 } from "react-native"
+
+import { useNavigation } from "@react-navigation/native"
+
+import { OptionsModal } from "../OptionsModal"
 
 import { SimpleLineIcons } from '@expo/vector-icons'
 
@@ -15,15 +20,56 @@ export type GroupProps = {
     id: string,
     name: string,
     amountOfPeople?: number,
-    image: string
+    image: string,
+    linkToTheGroup: string
 }
 
 type Props = TouchableOpacityProps & {
-    data: GroupProps,
-    openOptions: () => void
+    data: GroupProps
 }
 
-export function Group({ openOptions, data, ...rest } : Props){
+export function Group({ data, ...rest } : Props){
+    const navigation = useNavigation()
+
+    const [optionsVisible, setOptionsVisible] = useState(false)
+
+    const [options, setOptions] = useState([
+        {
+            id: '1',
+            title: 'Editar',
+            function: () => {
+                navigation.navigate('EditGroup')
+                setOptionsVisible(false)
+            }
+        },
+        {
+            id: '2',
+            title: 'Membros',
+            function: () => {
+                navigation.navigate('GroupMembers')
+                setOptionsVisible(false)
+            }
+        },
+        {
+            id: '3',
+            title: 'Copiar link',
+            function: () => {
+                Clipboard.setString(data.linkToTheGroup)
+                setOptionsVisible(false)
+            }
+        },
+        {
+            id: '4',
+            title: 'Sair',
+            function: () => setOptionsVisible(false)
+        },
+        {
+            id: '5',
+            title: 'Cancelar',
+            function: () => setOptionsVisible(false)
+        }
+    ])
+
     return(
         <View style={styles.container}>
             <TouchableOpacity activeOpacity={0.7} {...rest}>
@@ -39,9 +85,17 @@ export function Group({ openOptions, data, ...rest } : Props){
                 </View>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => openOptions()}>
+            <TouchableOpacity onPress={() => setOptionsVisible(!optionsVisible)}>
                 <SimpleLineIcons name="options-vertical" size={30} color="black" />
             </TouchableOpacity>
+
+            <OptionsModal
+                visible={optionsVisible}
+                closeModal={() => {
+                    setOptionsVisible(false)
+                }}
+                data={options}
+            />
         </View>
     )
 }

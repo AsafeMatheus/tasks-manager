@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { 
+    TouchableOpacity,
     SafeAreaView,
+    BackHandler,
     TextInput,
     View,
-    Alert,
-    Text,
-    TouchableOpacity,
-    BackHandler
+    Text
 } from "react-native"
 
 import firebase from '../../config/firebaseconfig'

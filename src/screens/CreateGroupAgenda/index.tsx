@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { 
-    SafeAreaView, 
-    View, 
     KeyboardAvoidingView,
-    Platform,
-    Text,
     TouchableOpacity,
-    StatusBar 
+    SafeAreaView, 
+    StatusBar, 
+    Platform,
+    View, 
+    Text
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
@@ -29,14 +29,14 @@ export function CreateGroupAgenda({route} : any){
 
     const currentTime = new Date()
 
-    const [title, setTitle] = useState('')
-    const [day, setDay] = useState('')
-    const [month, setMonth] = useState('')
-    const [place, setPlace] = useState('')
-    const [hour, setHour] = useState('')
-    const [minute, setMinute] = useState('')
     const [remember, setRemember] = useState(false)
     const [color, setColor] = useState('#FFFF00')
+    const [minute, setMinute] = useState('')
+    const [title, setTitle] = useState('')
+    const [place, setPlace] = useState('')
+    const [month, setMonth] = useState('')
+    const [hour, setHour] = useState('')
+    const [day, setDay] = useState('')
 
     const [colorModal, setColorModal] = useState(false)
     
@@ -47,18 +47,19 @@ export function CreateGroupAgenda({route} : any){
         .doc(groupId)
         .collection('agendas')
         .add({
-            title,
-            day,
-            month,
-            place,
-            hour,
-            minute,
-            remember,
-            color,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            year: currentTime.getFullYear(),
             groupAgenda: true,
             groupCreator,
+            remember,
             groupId,
-            year: currentTime.getFullYear()
+            minute,
+            title,
+            month,
+            place,
+            color,
+            hour,
+            day
         })
 
         navigation.navigate('GroupAgenda')

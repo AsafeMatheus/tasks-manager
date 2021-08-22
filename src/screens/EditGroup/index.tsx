@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { 
+    KeyboardAvoidingView,
     SafeAreaView,
     Platform,
-    KeyboardAvoidingView,
-    View,
     Alert
 } from "react-native"
 
@@ -24,9 +23,9 @@ setTestDeviceIDAsync('EMULATOR')
 export function EditGroup(){
     const navigation = useNavigation()
 
-    const [name, setName] = useState('Turma de inglês')
-    const [description, setDescription] = useState('Eventos e trabalhos da turma número 8 do CCAA')
     const [image, setImage] = useState('https://certificadocursosonline.com/wp-content/uploads/2017/09/curso-de-ingles-online-gratis-1280x720.jpg')
+    const [description, setDescription] = useState('Eventos e trabalhos da turma número 8 do CCAA')
+    const [name, setName] = useState('Turma de inglês')
 
     useEffect(() => {
         (async () => {

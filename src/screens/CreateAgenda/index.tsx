@@ -11,13 +11,13 @@ import {
 import { useNavigation } from "@react-navigation/native"
 import firebase from '../../config/firebaseconfig'
 
-import { FontAwesome5 } from '@expo/vector-icons'
-
 import { PickColorModal } from "../../components/PickColorModal"
 import { InputWithLabel } from "../../components/InputWithLabel"
 import { SmallInput } from "../../components/SmallInput"
 import { Button } from "../../components/Button"
 import { Header } from "../../components/Header"
+
+import { FontAwesome5 } from '@expo/vector-icons'
 
 import { styles } from "./styles"
 
@@ -25,14 +25,14 @@ export function CreateAgenda(){
     const navigation = useNavigation()
     const currentMoment = new Date()
 
+    const [remember, setRemember] = useState(false)
+    const [color, setColor] = useState('#FFFF00')
+    const [minute, setMinute] = useState('')
     const [title, setTitle] = useState('')
-    const [day, setDay] = useState('')
     const [month, setMonth] = useState('')
     const [place, setPlace] = useState('')
     const [hour, setHour] = useState('')
-    const [minute, setMinute] = useState('')
-    const [remember, setRemember] = useState(false)
-    const [color, setColor] = useState('#FFFF00')
+    const [day, setDay] = useState('')
 
     const [colorModal, setColorModal] = useState(false)
 
@@ -40,25 +40,21 @@ export function CreateAgenda(){
         setColorModal(false)
     }
 
-    const handleAgenda = () => {
-        navigation.navigate('Agenda')
-    }
-
     const addAgenda = () => {
         firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
         .doc('agendas')
         .collection('agendas-list')
         .add({
-            title,
-            hour,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            year: currentMoment.getFullYear(),
+            remember,
             minute,
             place,
-            remember,
             color,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            day,
+            title,
             month,
-            year: currentMoment.getFullYear()
+            hour,
+            day,
         })
 
         navigation.navigate('Agenda')

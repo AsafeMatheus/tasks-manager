@@ -25,6 +25,7 @@ export function GroupAgenda({ groupId, groupCreator } : Props){
         .collection('my-groups')
         .doc(groupId)
         .collection('agendas')
+        .orderBy('timestamp', 'desc')
         .onSnapshot((agendas) => {
             const agendasList : any = []
 

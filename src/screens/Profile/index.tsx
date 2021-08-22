@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { 
-    SafeAreaView, 
-    Text,
-    View,
-    Image,
     TouchableOpacity,
-    Alert  
+    SafeAreaView, 
+    Image,
+    Alert,
+    Text,
+    View
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"

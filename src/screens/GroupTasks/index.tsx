@@ -17,13 +17,12 @@ type Props = {
 export function GroupTasks({ groupId, groupCreator } : Props){
     const navigation = useNavigation()
 
-    const [taskMembersList, setTaskMebersList] : any = useState([])
     const [userImage, setUserImage] = useState('')
 
     const [ tasks, setTasks ] : any = useState([])
 
-    const userId = String(firebase.auth().currentUser?.uid)
     const username = String(firebase.auth().currentUser?.displayName)
+    const userId = String(firebase.auth().currentUser?.uid)
 
     const ref = firebase.firestore().collection(groupCreator)
     .doc('groups')
@@ -116,7 +115,8 @@ export function GroupTasks({ groupId, groupCreator } : Props){
                     title='Nova tarefa'
                     onPress={() => {
                         navigation.navigate('CreateGroupTask', {
-                            groupId
+                            groupId,
+                            groupCreator
                         })
                     }}
                 />

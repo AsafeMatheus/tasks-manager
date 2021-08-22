@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { 
     SafeAreaView,
-    BackHandler, 
-    FlatList,
-    Alert 
+    FlatList
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
@@ -29,8 +27,7 @@ export function Agenda(){
             const list : any = []
 
             query.forEach((doc) => {
-                list.push({...doc.data(), id: doc.id})
-                console.log(doc.data())
+                list.push({ id: doc.id, ...doc.data() })
             })
 
             setEvents(list)
@@ -53,7 +50,7 @@ export function Agenda(){
                             onPress={() => {
                                 navigation.navigate('EditAgenda', {item})
                                 console.log(item)
-                            }} 
+                            }}
                         />
                     )
                 }}

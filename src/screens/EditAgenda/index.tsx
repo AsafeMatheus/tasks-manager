@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import { 
-    SafeAreaView, 
-    View, 
     KeyboardAvoidingView,
-    Platform,
-    Text,
     TouchableOpacity,
-    Alert 
+    SafeAreaView, 
+    Platform,
+    Alert, 
+    View, 
+    Text
 } from "react-native"
 
 import firebase from '../../config/firebaseconfig'
@@ -24,15 +24,15 @@ import { styles } from "./styles"
 export function EditAgenda({ navigation, route } : any){
     const data = route.params.item
 
+    const [remember, setRemember] = useState(data.remember)
+    const [minute, setMinute] = useState(data.minute)
     const [title, setTitle] = useState(data.title)
-    const [day, setDay] = useState(data.day)
     const [month, setMonth] = useState(data.month)
     const [place, setPlace] = useState(data.place)
-    const [hour, setHour] = useState(data.hour)
-    const [minute, setMinute] = useState(data.minute)
-    const [remember, setRemember] = useState(data.remember)
     const [color, setColor] = useState(data.color)
-
+    const [hour, setHour] = useState(data.hour)
+    const [day, setDay] = useState(data.day)
+    
     const userId = String(firebase.auth().currentUser?.uid)
     const [colorModal, setColorModal] = useState(false)
 
@@ -74,18 +74,19 @@ export function EditAgenda({ navigation, route } : any){
             .doc(data.groupId)
             .collection('agendas')
             .doc(data.id).set({
-                title,
-                day,
-                month,
-                place,
-                hour,
-                remember,
-                color,
-                groupAgenda: true,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 groupCreator: data.groupCreator,
                 groupId: data.groupId,
                 minute: data.minute,
-                year: data.year
+                year: data.year,
+                groupAgenda: true,
+                remember,
+                title,
+                month,
+                place,
+                color,
+                hour,
+                day,
             })
 
             navigation.navigate('GroupAgenda')
@@ -94,15 +95,15 @@ export function EditAgenda({ navigation, route } : any){
             .doc('agendas')
             .collection('agendas-list')
             .doc(data.id).set({
-                title,
-                hour,
-                minute,
-                place,
-                remember,
-                color,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                day,
-                month
+                remember,
+                minute,
+                title,
+                place,
+                color,
+                month,
+                hour,
+                day
             })
 
             navigation.navigate('Agenda')

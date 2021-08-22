@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { 
+    ActivityIndicator,
     SafeAreaView, 
     Text,
-    View,
-    ActivityIndicator 
+    View
 } from "react-native"
 
 import firebase from "../../config/firebaseconfig"

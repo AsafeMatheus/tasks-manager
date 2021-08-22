@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { 
-    SafeAreaView,
-    View,
     KeyboardAvoidingView,
+    SafeAreaView,
+    StatusBar,
     Platform,
     Alert,
-    StatusBar
+    View
 } from "react-native"
 
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
@@ -20,40 +20,30 @@ import { styles } from "./styles"
 setTestDeviceIDAsync('EMULATOR')
 
 export function CreateGroupTask({ navigation, route } : any){
-    const { groupId } = route.params
+    const { groupId, groupCreator } = route.params
 
+    const [amountOfPeople, setAmountOfPeople] = useState(0)
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
-    const [amountOfPeople, setAmountOfPeople] = useState(0)
 
     const addTask = () => {
-        const userId = String(firebase.auth().currentUser?.uid)
-
-        const ref = firebase.firestore().collection(userId)
+        const ref = firebase.firestore().collection(groupCreator)
         .doc('groups')
         .collection('my-groups')
         .doc(groupId)
         
         ref.collection('group-tasks')
         .add({
-            title,
-            date,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             amountOfPeople,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            title,
+            date
         })
 
-        navigation.navigate('GroupNavigation', { groupId })
-    }
-
-    const verification = () => {
-        let titleLength = title.length
-        let dateLength = date.length
-
-        if (titleLength == 0 || dateLength == 0){
-            Alert.alert('Por favor, preencha todos os campos assima')
-        } else{
-            navigation.navigate('GroupNavigation')
-        }
+        navigation.navigate('GroupNavigation', { 
+            creatorId: groupCreator,
+            groupId
+        })
     }
 
     return(

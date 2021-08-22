@@ -52,12 +52,12 @@ export function CreateGroup(){
         .collection('my-groups')
 
         reference.add({
-            name,
-            image,
-            description,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             creator: firebase.auth().currentUser?.uid,
             everybodyCanPost,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            description,
+            image,
+            name,
         })
 
         navigation.navigate('Grupos')
@@ -78,23 +78,13 @@ export function CreateGroup(){
         }
     }
 
-    const verification = () => {
-        let nameLength = name.length
-        let descriptionLength = description.length
-
-        if (nameLength == 0 || descriptionLength == 0){
-            Alert.alert('Por favor, preencha todos os campos assima')
-        } else{
-            navigation.navigate('Grupos')
-        }
-    }
-
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
                 <Header
                     title='Novo grupo'
                 />
+                
                 <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios'? 'padding' : 'position'}
                 >

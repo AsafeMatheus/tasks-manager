@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react"
 import {
     KeyboardAvoidingView,
+    TouchableOpacity, 
     SafeAreaView,
     Platform,
-    Text,
-    View,
     Alert,
-    TouchableOpacity 
+    Text,
+    View
 } from "react-native"
 
 import { useNavigation } from '@react-navigation/native'
@@ -66,7 +66,7 @@ export function EditAccount(){
         if (usernameLength == 0 || emailLength == 0){
             Alert.alert('Por favor, preencha todos os campos assima')
         } else{
-            navigation.navigate('Tab'/*, {username, imageUrl: image}*/)
+            navigation.navigate('MainNavigation')
         }
     }
 

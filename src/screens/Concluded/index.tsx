@@ -29,8 +29,9 @@ export function Concluded(){
             const list : any = []
 
             query.forEach((doc) => {
-                list.push({...doc.data(), id: doc.id})
+                list.push({ id: doc.id, ...doc.data() })
             })
+
             setFinishedTasks(list)
         })
     }, [])
@@ -73,6 +74,7 @@ export function Concluded(){
                     style={styles.list}
                     showsVerticalScrollIndicator={false}
                 />
+                
                 <Button
                     title='Apagar tudo'
                     onPress={() => {

@@ -3,8 +3,8 @@ import { SafeAreaView, FlatList } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
 import firebase from '../../config/firebaseconfig'
+import * as Linking from 'expo-linking'
 
-import { OptionsModal } from "../../components/OptionsModal"
 import { AddButton } from "../../components/AddButton"
 import { Divider } from "../../components/Divider"
 import { Header } from "../../components/Header"
@@ -15,42 +15,6 @@ import { styles } from "./styles"
 export function Groups(){
     const navigation = useNavigation()
 
-    const [optionsVisible, setOptionsVisible] = useState(false)
-
-    const [options, setOptions] = useState([
-        {
-            id: '1',
-            title: 'Editar',
-            function: () => {
-                navigation.navigate('EditGroup')
-                setOptionsVisible(false)
-            }
-        },
-        {
-            id: '2',
-            title: 'Membros',
-            function: () => {
-                navigation.navigate('GroupMembers')
-                setOptionsVisible(false)
-            }
-        },
-        {
-            id: '3',
-            title: 'Copiar link',
-            function: () => setOptionsVisible(false)
-        },
-        {
-            id: '4',
-            title: 'Sair',
-            function: () => setOptionsVisible(false)
-        },
-        {
-            id: '5',
-            title: 'Cancelar',
-            function: () => setOptionsVisible(false)
-        }
-    ])
-
     const [groups, setGroups] : any = useState([])
 
     useEffect(() => {
@@ -58,14 +22,29 @@ export function Groups(){
         const reference = firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
-        .orderBy('timestamp', 'desc')
 
         const mainFunction = () => {
-            reference.onSnapshot((doc) => {
+            reference.orderBy('timestamp', 'desc')
+            .onSnapshot((doc) => {
                 let list: any = []
 
                 doc.forEach((item) => {
-                    list.push({id: item.id, ...item.data()})
+                    if (!item.data().linkToTheGroup){
+                        let linkToTheGroup = Linking.createURL('exp://192.168.15.7:19000', {
+                            queryParams:{
+                                groupId: item.id,
+                                groupCreator: item.data().creator
+                            }
+                        })
+
+                        reference.doc(item.id)
+                        .set({
+                            ...item.data(),
+                            linkToTheGroup
+                        })
+                    }
+
+                    list.push({ id: item.id, ...item.data() })
                 })
 
                 setGroups(list)
@@ -73,7 +52,6 @@ export function Groups(){
         }
 
         return mainFunction()
-
     }, [])
 
     return(
@@ -94,9 +72,6 @@ export function Groups(){
                     return(
                         <Group
                             data={item}
-                            openOptions={() => {
-                                setOptionsVisible(true)
-                            }}
                             onPress={() => {
                                 navigation.navigate('GroupNavigation', {
                                     groupId: item.id,
@@ -108,14 +83,6 @@ export function Groups(){
                 }}
                 ItemSeparatorComponent={Divider}
                 showsVerticalScrollIndicator={false}
-            />
-
-            <OptionsModal
-                visible={optionsVisible}
-                closeModal={() => {
-                    setOptionsVisible(false)
-                }}
-                data={options}
             />
         </SafeAreaView>
     )
