@@ -3,17 +3,15 @@ import {
     SafeAreaView,
     View,
     KeyboardAvoidingView,
-    Platform,
-    Alert 
+    Platform
 } from "react-native"
 
+import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
 import { useNavigation } from "@react-navigation/native"
 import firebase from "../../config/firebaseconfig"
 import * as ImagePicker from 'expo-image-picker'
-import {
-    AdMobBanner,
-    setTestDeviceIDAsync
-} from 'expo-ads-admob'
+import 'react-native-get-random-values'
+const uuid = require('uuid')
 
 import { InputWithLabel } from "../../components/InputWithLabel"
 import { MarkOption } from "../../components/MarkOption"
@@ -47,6 +45,8 @@ export function CreateGroup(){
     }, [])
 
     const addGroup = () => {
+        let randomId = uuid.v4()
+
         const reference = firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
         .doc('groups')
         .collection('my-groups')
@@ -61,6 +61,8 @@ export function CreateGroup(){
         })
 
         navigation.navigate('Grupos')
+
+        console.log(randomId)
     }
 
     const pickImage = async () => {

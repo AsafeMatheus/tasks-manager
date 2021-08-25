@@ -23,5 +23,10 @@ export const styles = StyleSheet.create({
     },
     editPasswodText:{
         color: '#dc2f02'
+    },
+    loading:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })

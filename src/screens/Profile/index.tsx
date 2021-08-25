@@ -21,7 +21,10 @@ import { styles } from "./styles"
 export function Profile(){
     const navigation = useNavigation()
 
+    const [username, setUsername] = useState('')
     const [image, setImage] = useState('')
+    const [email, setEmail] = useState('')
+
     const currentUser = firebase.auth().currentUser
 
     useEffect(() => {
@@ -30,6 +33,9 @@ export function Profile(){
             let data =  doc.data()
             setImage(data?.avatar)
         })
+
+        setUsername(String(firebase.auth().currentUser?.displayName))
+        setEmail(String(firebase.auth().currentUser?.email))
     }, [])
 
     const logOut = () => {
@@ -63,12 +69,12 @@ export function Profile(){
 
             <View style={styles.content}>
                 <Text style={styles.text}>Nome de usuário:</Text>
-                <Text style={styles.text}>{currentUser?.displayName}</Text>
+                <Text style={styles.text}>{username}</Text>
             </View>
 
             <View style={styles.content}>
                 <Text style={styles.text}>Email:</Text>
-                <Text style={styles.text}>{currentUser?.email}</Text>
+                <Text style={styles.text}>{email}</Text>
             </View>
 
             <View style={styles.content}>

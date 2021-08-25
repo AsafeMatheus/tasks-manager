@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import {
     KeyboardAvoidingView,
+    ActivityIndicator,
     TouchableOpacity, 
     SafeAreaView,
     Platform,
@@ -18,6 +19,7 @@ import { PickImage } from "../../components/PickImage"
 import { Header } from "../../components/Header"
 import { Button } from "../../components/Button"
 
+import { theme } from "../../global/styles/theme"
 import { styles } from "./styles"
 
 export function EditAccount(){
@@ -27,6 +29,8 @@ export function EditAccount(){
     const [username, setUsername] = useState(String(currentUser?.displayName))
     const [email, setEmail] = useState(String(currentUser?.email))
     const [image, setImage] = useState('')
+
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
         (async () => {
@@ -44,6 +48,8 @@ export function EditAccount(){
             let data =  doc.data()
             setImage(data?.avatar)
         })
+
+        setLoading(false)
     }, [])
 
     const pickImage = async () => {
@@ -51,24 +57,65 @@ export function EditAccount(){
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [4, 3],
+          base64: true,
           quality: 1,
         })
     
         if (!result.cancelled) {
-          setImage(result.uri)
+          setImage(String(result.base64))
         }
     }
 
-    const verification = () => {
-        let usernameLength = username.length
-        let emailLength = email.length
+    const updateProfile = async () => {
+        const currentUser = firebase.auth().currentUser
 
-        if (usernameLength == 0 || emailLength == 0){
-            Alert.alert('Por favor, preencha todos os campos assima')
-        } else{
-            navigation.navigate('MainNavigation')
-        }
+        setLoading(true)
+
+        await currentUser?.updateProfile({
+            displayName: username
+        })
+
+        await currentUser?.updateEmail(email).then(
+            null
+        ).catch(() => Alert.alert('Não foi possível atualizar o email. Tente novamente mais tarder.'))
+
+        await firebase.firestore().collection(String(currentUser?.uid))
+        .doc('profile-image')
+        .set({
+            avatar: image
+        })
+
+        await navigation.navigate('Opening')
+
+        await setLoading(false)
     }
+
+    const resetPassword = () => {
+        firebase.auth().sendPasswordResetEmail(String(currentUser?.email))
+        .then(() => {
+            Alert.alert('Email enviado', 'enviamos um email de redefinição de senha para o endereço: ' + String(currentUser?.email)),
+            [{
+                text: "ok",
+                onPress: () => {
+                    setLoading(true)
+
+                    navigation.navigate('Opening')
+
+                    setLoading(false)
+                }
+            }]
+        }).catch((err) => {
+            Alert.alert(err.message)
+        })
+    }
+
+    if(loading){
+        return(
+            <View style={styles.loading}>
+                <ActivityIndicator size={50} color={theme.colors.highlight} />
+            </View>
+        )
+    }else{
 
     return(
         <SafeAreaView style={styles.container}>
@@ -94,6 +141,7 @@ export function EditAccount(){
 
             <TouchableOpacity
                 style={styles.editPassword}
+                onPress={() => resetPassword()}
             >
                 <Text style={styles.editPasswodText}>Redefinir senha</Text>
             </TouchableOpacity>
@@ -106,9 +154,10 @@ export function EditAccount(){
             <View style={styles.Button}>
                 <Button
                     title='Confirmar' 
-                    onPress={() => verification()}
+                    onPress={() => updateProfile()}
                 />
             </View>
         </SafeAreaView>
     )
+    }
 }
