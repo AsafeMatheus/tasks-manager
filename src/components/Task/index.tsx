@@ -50,7 +50,7 @@ export function Task({ item, finished, deleted } : Props){
     return(
         <Swipeable renderRightActions={FinishedAction}>
             <View style={styles.container}>
-                <Text>
+                <Text style={styles.title}>
                     {item.desc}
                 </Text>
             </View>

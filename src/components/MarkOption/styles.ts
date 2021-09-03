@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         width: '100%',
@@ -11,7 +13,7 @@ export const styles = StyleSheet.create({
         marginBottom: 40
     },
     title:{
-        fontSize: 20
+        fontSize: adjust(20)
     },
     markView:{
         width: 26,

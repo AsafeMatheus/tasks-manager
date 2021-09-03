@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react"
-import { 
+import {
     TouchableOpacity,
     SafeAreaView,
     BackHandler,
     TextInput,
+    Keyboard,
     View,
     Text
 } from "react-native"
@@ -15,6 +16,7 @@ import { Foundation } from '@expo/vector-icons'
 import { styles } from "./styles"
 
 export function SignIn({ navigation, route } : any){
+    const [showHeader, setShowHeader] = useState(true)
     const [errorLogin, setErrorLogin] = useState('')
     const [password, setPassword] = useState('')
     const [email, setEmail] = useState('')
@@ -36,6 +38,14 @@ export function SignIn({ navigation, route } : any){
                 backAction
             )
         }
+
+        Keyboard.addListener("keyboardDidShow", () => {
+            setShowHeader(false)
+        })
+
+        Keyboard.addListener("keyboardDidHide", () => {
+            setShowHeader(true)
+        })
     }, [])
 
     const signIn = () => {
@@ -54,12 +64,21 @@ export function SignIn({ navigation, route } : any){
 
     return(
         <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Entrar</Text>
-            </View>
+            {
+                showHeader ?
+                <View style={styles.header}>
+                    <Text style={styles.headerTitle}>Entrar</Text>
+                </View>
+                :
+                <View />
+            }
 
             <View style={styles.content}>
-                <Text style={styles.title}>
+                <Text
+                    adjustsFontSizeToFit
+                    numberOfLines={1} 
+                    style={styles.title}
+                >
                     Tasks manager
                 </Text>
 
@@ -98,13 +117,26 @@ export function SignIn({ navigation, route } : any){
                 </TouchableOpacity>
 
                 <View style={styles.footer}>
-                    <Text style={styles.footerLeftText}>Não possui uma conta ainda? </Text>
+                    <Text 
+                        adjustsFontSizeToFit
+                        numberOfLines={1}
+                        style={styles.footerLeftText}
+                    >
+                        Não possui uma conta?{' '}
+                    </Text>
+
                     <TouchableOpacity 
                         onPress={() => {
                             navigation.navigate('SignUp')
                         }}
                     >
-                        <Text style={styles.link}>Cadastrar</Text>
+                        <Text
+                            adjustsFontSizeToFit
+                            numberOfLines={1} 
+                            style={styles.link}
+                        >
+                            cadastrar
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>

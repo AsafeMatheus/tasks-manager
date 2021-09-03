@@ -4,6 +4,7 @@ import {
     ActivityIndicator,
     TouchableOpacity, 
     SafeAreaView,
+    Keyboard,
     Platform,
     Alert,
     Text,
@@ -31,6 +32,7 @@ export function EditAccount(){
     const [image, setImage] = useState('')
 
     const [loading, setLoading] = useState(false)
+    const [showButton, setShowButton] = useState(true)
 
     useEffect(() => {
         (async () => {
@@ -50,6 +52,14 @@ export function EditAccount(){
         })
 
         setLoading(false)
+
+        Keyboard.addListener('keyboardDidShow', () => {
+            setShowButton(false)
+        })
+
+        Keyboard.addListener('keyboardDidHide', () => {
+            setShowButton(true)
+        })
     }, [])
 
     const pickImage = async () => {
@@ -151,12 +161,18 @@ export function EditAccount(){
                 onPress={pickImage}
             />
 
-            <View style={styles.Button}>
-                <Button
-                    title='Confirmar' 
-                    onPress={() => updateProfile()}
-                />
-            </View>
+            {
+                showButton ?
+                <View style={styles.Button}>
+                    <Button
+                        title='Confirmar' 
+                        onPress={() => updateProfile()}
+                    />
+                </View>
+                :
+                <View />
+            }
+            
         </SafeAreaView>
     )
     }

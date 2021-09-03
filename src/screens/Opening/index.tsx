@@ -38,7 +38,11 @@ export function Opening({navigation} : any){
 
     return(
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>
+            <Text 
+                adjustsFontSizeToFit
+                numberOfLines={2}
+                style={styles.title}
+            >
                 Bem vindo {'\n'}
                 ao greate keeper
             </Text>

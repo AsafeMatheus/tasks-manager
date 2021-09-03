@@ -1,9 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
     TouchableOpacity,
-    SafeAreaView, 
+    SafeAreaView,
+    ScrollView, 
     Platform,
+    Keyboard,
     Alert, 
     View, 
     Text
@@ -34,7 +36,19 @@ export function EditAgenda({ navigation, route } : any){
     const [day, setDay] = useState(data.day)
     
     const userId = String(firebase.auth().currentUser?.uid)
+
     const [colorModal, setColorModal] = useState(false)
+    const [showButton, setShowButton] = useState(true)
+
+    useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", () => {
+            setShowButton(false)
+        })
+
+        Keyboard.addListener("keyboardDidHide", () => {
+            setShowButton(true)
+        })
+    }, [])
 
     const deleteAgenda = () => {
         Alert.alert("Alerta!", `Deseja mesmo excluir isto de sua agenda`, [
@@ -124,91 +138,94 @@ export function EditAgenda({ navigation, route } : any){
                 }
             />
 
-            <KeyboardAvoidingView 
-                behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
             >
-                <InputWithLabel 
-                    title='Título'
-                    set={setTitle}
-                    value={title}
-                />
-
-                <InputWithLabel 
-                    title='Local'
-                    set={setPlace}
-                    value={place}
-                />
-
-                <View style={styles.time}>
-                    <View>
-                        <Text style={styles.title}>Dia e mês:</Text>
-                        <View style={styles.smallInputs}>
-                            <SmallInput 
-                                set={setDay}
-                                value={day} 
-                            />
-                            <Text style={styles.separator}>/</Text>
-                            <SmallInput 
-                                set={setMonth}
-                                value={month} 
-                            />
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+                >
+                    <InputWithLabel
+                        title='Título'
+                        set={setTitle}
+                        value={title}
+                    />
+                    <InputWithLabel
+                        title='Local'
+                        set={setPlace}
+                        value={place}
+                    />
+                    <View style={styles.time}>
+                        <View>
+                            <Text style={styles.title}>Dia e mês:</Text>
+                            <View style={styles.smallInputs}>
+                                <SmallInput
+                                    set={setDay}
+                                    value={day}
+                                />
+                                <Text style={styles.separator}>/</Text>
+                                <SmallInput
+                                    set={setMonth}
+                                    value={month}
+                                />
+                            </View>
+                        </View>
+                        <View>
+                            <Text style={styles.title}>Horário:</Text>
+                            <View style={styles.smallInputs}>
+                                <SmallInput
+                                    set={setHour}
+                                    value={hour}
+                                />
+                                <Text style={styles.separator}>:</Text>
+                                <SmallInput
+                                    set={setMinute}
+                                    value={minute}
+                                />
+                            </View>
                         </View>
                     </View>
-
-                    <View>
-                        <Text style={styles.title}>Horário:</Text>
-                        <View style={styles.smallInputs}>
-                            <SmallInput 
-                                set={setHour}
-                                value={hour} 
-                            />
-                            <Text style={styles.separator}>:</Text>
-                            <SmallInput 
-                                set={setMinute} 
-                                value={minute}
-                            />
-                        </View>
+                </KeyboardAvoidingView>
+                <TouchableOpacity
+                    style={styles.pickColor}
+                    activeOpacity={0.7}
+                    onPress={() => setColorModal(true)}
+                >
+                    <View style={[styles.colorView, {backgroundColor: color}]} />
+                    <View style={styles.colorPickerTextContainer}>
+                        <Text style={styles.colorPickerText}>Escolher cor</Text>
                     </View>
-                </View>
-            </KeyboardAvoidingView>
-
-            <TouchableOpacity
-                style={styles.pickColor}
-                activeOpacity={0.7}
-                onPress={() => setColorModal(true)}
-            >
-                <View style={[styles.colorView, {backgroundColor: color}]} />
-
-                <View style={styles.colorPickerTextContainer}>
-                    <Text style={styles.colorPickerText}>Escolher cor</Text>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                {
+                    remember ?
+                    <TouchableOpacity
+                        style={styles.alarm}
+                        onPress={() => setRemember(!remember)}
+                    >
+                        <FontAwesome5 name="bell" size={24} color="black" />
+                        <Text style={styles.alarmText}>Desativar</Text>
+                    </TouchableOpacity>
+                    :
+                    <TouchableOpacity
+                        style={styles.alarm}
+                        onPress={() => setRemember(!remember)}
+                    >
+                        <FontAwesome5 name="bell-slash" size={24} color="black" />
+                        <Text style={styles.alarmText}>Ativar</Text>
+                    </TouchableOpacity>
+                }
+            </ScrollView>
 
             {
-                remember ?
-                <TouchableOpacity 
-                    style={styles.alarm}
-                    onPress={() => setRemember(!remember)}
-                >
-                    <FontAwesome5 name="bell" size={24} color="black" />
-                    <Text style={styles.alarmText}>Desativar</Text>
-                </TouchableOpacity>
+                showButton ?
+                <View style={styles.footer}>
+                    <Button
+                        title='Confirmar'
+                        onPress={update}
+                    />
+                </View>
                 :
-                <TouchableOpacity 
-                    style={styles.alarm}
-                    onPress={() => setRemember(!remember)}
-                >
-                    <FontAwesome5 name="bell-slash" size={24} color="black" />
-                    <Text style={styles.alarmText}>Ativar</Text>
-                </TouchableOpacity>
+                <View />
             }
-
-            <View style={styles.footer}>
-                <Button
-                    title='Confirmar'
-                    onPress={update}
-                />
-            </View>
 
             <PickColorModal
                 visible={colorModal}

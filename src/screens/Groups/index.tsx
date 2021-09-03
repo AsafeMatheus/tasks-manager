@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react"
-import { SafeAreaView, FlatList } from "react-native"
+import { SafeAreaView, FlatList, Alert } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
 import firebase from '../../config/firebaseconfig'
-import * as Linking from 'expo-linking'
 
 import { AddButton } from "../../components/AddButton"
 import { Divider } from "../../components/Divider"
@@ -16,48 +15,38 @@ export function Groups(){
     const navigation = useNavigation()
 
     const [groups, setGroups] : any = useState([])
+    const [groupsIdsState, setGroupsIdsState] = useState([])
 
     useEffect(() => {
         const userId = String(firebase.auth().currentUser?.uid)
-        const reference = firebase.firestore().collection(userId)
+
+        firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
+        .onSnapshot((myGroupsIds) => {
+            const listOfGroupsIds : any = []
 
-        const mainFunction = () => {
-            reference.orderBy('timestamp', 'desc')
-            .onSnapshot((doc) => {
-                let list: any = []
-
-                doc.forEach((item) => {
-                    if (!item.data().linkToTheGroup){
-                        let linkToTheGroup = Linking.createURL('exp://192.168.15.7:19000', {
-                            queryParams:{
-                                groupId: item.id,
-                                groupCreator: item.data().creator
-                            }
-                        })
-
-                        reference.doc(item.id)
-                        .set({
-                            ...item.data(),
-                            linkToTheGroup
-                        })
-                    }
-
-                    list.push({ id: item.id, ...item.data() })
+            myGroupsIds.forEach((oneGroupId) => {
+                firebase.firestore().collection('groups')
+                .doc(oneGroupId.data().groupId)
+                .get()
+                .then((response) => {
+                    listOfGroupsIds.push({
+                        id: oneGroupId.data().groupId,
+                        ...response.data()
+                    })
                 })
-
-                setGroups(list)
+                .catch((err) => console.log(err))
             })
-        }
 
-        return mainFunction()
+            setGroups(listOfGroupsIds)
+        })
     }, [])
 
     return(
         <SafeAreaView style={styles.container}>
             <Header
-                title='Grupos'
+                title={groups.length}
                 action={
                     <AddButton
                         onPress={() => navigation.navigate('CreateGroup')} 
@@ -75,7 +64,7 @@ export function Groups(){
                             onPress={() => {
                                 navigation.navigate('GroupNavigation', {
                                     groupId: item.id,
-                                    creatorId: item.creator
+                                    creatorId: 'sdfsd'
                                 })
                             }}
                         />

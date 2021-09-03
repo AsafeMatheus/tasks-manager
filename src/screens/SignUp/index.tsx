@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
     ActivityIndicator,
-    SafeAreaView,
-    Platform, 
+    ScrollView,
+    Platform,
     Alert,
     Text, 
     View
 } from "react-native"
 
+import { Dimensions} from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import firebase from '../../config/firebaseconfig'
 import 'firebase/storage'
@@ -23,6 +24,8 @@ import { theme } from "../../global/styles/theme"
 import { styles } from "./styles"
 
 export function SignUp({ navigation } : any){
+    const [deviceHeight, setDeviceHeight] = useState(692)
+
     const [loading, setLoading] = useState(false)
 
     const [username, setUsername] = useState('')
@@ -40,6 +43,8 @@ export function SignUp({ navigation } : any){
             }
           }
         })()
+
+        setDeviceHeight(Dimensions.get('window').height)
     }, [])
 
     const pickImage = async () => {
@@ -91,43 +96,107 @@ export function SignUp({ navigation } : any){
             </View>
         )
     }else{
+        return(
+            <>
+                {
+                    deviceHeight > 600 ?
+                    <View
+                        style={styles.container}
+                    >
+                        <Header
+                            title='Cadastro'
+                        />
 
-    return(
-        <SafeAreaView style={styles.container}>
-            <Header
-                title='Cadastro'
-            />
+                        <KeyboardAvoidingView
+                            style={styles.inputs}
+                            behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+                        >
+                            <InputWithLabel
+                                title='nome de usuario'
+                                set={setUsername}
+                                maxLength={13}
+                            />
+                            <InputWithLabel
+                                title='Senha'
+                                set={setPassword}
+                            />
+                            <InputWithLabel
+                                title='Email'
+                                set={setEmail}
+                            />
+                        </KeyboardAvoidingView>
 
-            <KeyboardAvoidingView 
-                style={styles.inputs}
-                behavior={Platform.OS === 'ios'? 'padding' : 'position'}
-            >
-                <InputWithLabel
-                    title='nome de usuario'
-                    set={setUsername}
-                    maxLength={13}
-                />
-                <InputWithLabel
-                    title='Senha'
-                    set={setPassword}
-                />
-                <InputWithLabel
-                    title='Email'
-                    set={setEmail}
-                />
-            </KeyboardAvoidingView>
+                        <PickImage
+                            imageUrl={imageUrl}
+                            onPress={pickImage}
+                        />
 
-            <PickImage
-                imageUrl={imageUrl}
-                onPress={pickImage}
-            />
+                        <View 
+                            style={[
+                                styles.Button,
+                                { paddingBottom: 15 }
+                            ]}
+                        >
+                            <Button
+                                title='Cadastrar'
+                                onPress={() => signUp()}
+                                space
+                            />
+                        </View>
+                    </View>
 
-            <View style={styles.Button}>
-                <Button
-                    title='Cadastrar' 
-                    onPress={() => signUp()}
-                />
-            </View>
-        </SafeAreaView>
-    )}
+                    :
+
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+                    >
+                    <View style={styles.container}>
+                        <KeyboardAvoidingView
+                            behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+                        >
+                            <Header
+                                title='Cadastro'
+                            />
+
+                            <View style={styles.inputs}>
+                                <InputWithLabel
+                                    title='nome de usuario'
+                                    set={setUsername}
+                                    maxLength={13}
+                                />
+                                <InputWithLabel
+                                    title='Senha'
+                                    set={setPassword}
+                                />
+                                <InputWithLabel
+                                    title='Email'
+                                    set={setEmail}
+                                />
+                            </View>
+
+                        </KeyboardAvoidingView>
+
+                        <PickImage
+                            imageUrl={imageUrl}
+                            onPress={pickImage}
+                        />
+
+                        <View 
+                            style={[
+                                styles.Button,
+                                { paddingBottom: 15 }
+                            ]}
+                        >
+                            <Button
+                                title='Cadastrar'
+                                onPress={() => signUp()}
+                                space
+                            />
+                        </View>
+                    </View>
+                </ScrollView>
+                }
+            </>
+        )
+    }
 }

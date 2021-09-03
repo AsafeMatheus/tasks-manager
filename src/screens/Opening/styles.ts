@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
@@ -10,7 +12,7 @@ export const styles = StyleSheet.create({
         paddingTop: 100
     },
     title:{
-        fontSize: 30
+        fontSize: adjust(30)
     },
     loading:{
         flex: 1,

@@ -2,35 +2,31 @@ import { StyleSheet } from "react-native"
 import { getStatusBarHeight } from "react-native-iphone-x-helper"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingTop: getStatusBarHeight() + 26,
+        paddingTop: getStatusBarHeight() + adjust(26),
         paddingHorizontal: 24,
         paddingBottom: 70
     },
     image:{
-        width: 80,
-        height: 80,
-        borderRadius: 40
+        width: adjust(80),
+        height: adjust(80),
+        borderRadius: adjust(40)
     },
     imageContainer:{
         alignItems: 'center',
         justifyContent: 'center',
-        height: 150
+        height: adjust(130)
     },
     text:{
-        fontSize: 15
+        fontSize: adjust(15)
     },
     content:{
-        marginBottom: 20
-    },
-    warn:{
-        marginTop: 70,
-        fontSize: 15,
-        textAlign: 'center',
-        color: 'red',
+        marginBottom: adjust(20)
     },
     footer:{
         position: 'absolute',
@@ -45,7 +41,7 @@ export const styles = StyleSheet.create({
         flex: 1
     },
     logoutText:{
-        fontSize: 18,
+        fontSize: adjust(18),
         marginLeft: 5
     }
 })

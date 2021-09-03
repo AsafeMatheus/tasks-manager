@@ -24,7 +24,9 @@ export function PickImage({ imageUrl, ...rest } : Props){
                 <View style={styles.image} />
             }
 
-            <Text style={styles.title}>
+            <Text
+                style={styles.title}
+            >
                 Escolher imagem
             </Text>
 

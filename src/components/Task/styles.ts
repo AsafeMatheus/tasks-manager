@@ -1,13 +1,15 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         width: '100%',
         backgroundColor: theme.colors.secondary,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 18,
+        padding: adjust(18),
         borderRadius: 8,
         borderWidth: 1,
         borderColor: theme.colors.secondary10,
@@ -25,5 +27,8 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginHorizontal: 5
+    },
+    title:{
+        fontSize: adjust(15)
     }
 })

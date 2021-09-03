@@ -1,17 +1,19 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         width: '100%',
-        padding: 15,
+        padding: adjust(15),
         marginBottom: 20
     },
     title:{
-        fontSize: 18
+        fontSize: adjust(18)
     },
     information:{
-        fontSize: 13
+        fontSize: adjust(13)
     },
     content:{
         flexDirection: 'row',

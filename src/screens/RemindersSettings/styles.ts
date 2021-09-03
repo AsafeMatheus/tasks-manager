@@ -2,6 +2,8 @@ import { StyleSheet } from "react-native"
 import { getStatusBarHeight } from "react-native-iphone-x-helper"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
@@ -10,7 +12,7 @@ export const styles = StyleSheet.create({
         paddingTop: getStatusBarHeight() + 26 
     },
     description:{
-        fontSize: 18,
+        fontSize: adjust(18),
         marginBottom: 40
     },
     footer:{

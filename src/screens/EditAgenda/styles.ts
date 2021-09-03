@@ -2,19 +2,24 @@ import { StyleSheet } from "react-native"
 import { getStatusBarHeight } from "react-native-iphone-x-helper"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
         paddingHorizontal: 24,
-        paddingTop: getStatusBarHeight() + 26,
-        paddingBottom: 10,
+        paddingTop: getStatusBarHeight() + adjust(26),
+        paddingBottom: 80,
         backgroundColor: theme.colors.background
     },
     footer:{
-        width: '100%'
+        width: '100%',
+        position: 'absolute',
+        bottom: adjust(24),
+        marginHorizontal: 24
     },
     title:{
-        fontSize: 15,
+        fontSize: adjust(15),
         marginBottom: 4
     },
     smallInputs:{
@@ -31,8 +36,8 @@ export const styles = StyleSheet.create({
     alarm:{
         flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 30,
-        marginTop: 20,
+        marginBottom: adjust(30),
+        marginTop: adjust(20),
         justifyContent: 'center'
     },
     alarmText:{

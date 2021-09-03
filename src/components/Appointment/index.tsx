@@ -8,6 +8,7 @@ import {
 
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
+import { adjust } from "../../global/functions"
 import { styles } from "./styles"
 
 export type AgendaProps = {
@@ -49,7 +50,7 @@ export function Appointment({ data, ...rest } : Props){
                 <Text style={styles.remember}>{
                         data.remember 
                         ? 
-                        <MaterialCommunityIcons name="bell-ring" size={24} color="black" />
+                        <MaterialCommunityIcons name="bell-ring" size={adjust(24)} color="black" />
                         : 
                         <></>
                     }

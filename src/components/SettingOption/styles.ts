@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native"
 
+import { adjust } from "../../global/functions"
+
 export const styles =  StyleSheet.create({
     container:{
         width: '100%',
@@ -7,6 +9,6 @@ export const styles =  StyleSheet.create({
         padding: 15
     },
     title:{
-        fontSize: 18
+        fontSize: adjust(18)
     }
 })

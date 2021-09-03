@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjust, adjustSpace } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         width: '100%',
@@ -8,9 +10,9 @@ export const styles = StyleSheet.create({
         justifyContent: 'space-between',
         backgroundColor: theme.colors.background,
         alignItems: 'center',
-        marginBottom: 45
+        marginBottom: adjustSpace(45)
     },
     title:{
-        fontSize: 18
+        fontSize: adjust(18)
     }
 })

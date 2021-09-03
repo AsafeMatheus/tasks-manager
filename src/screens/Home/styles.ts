@@ -2,12 +2,14 @@ import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 import { getStatusBarHeight } from "react-native-iphone-x-helper"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: theme.colors.background,
         paddingHorizontal: 24,
-        paddingTop: getStatusBarHeight() + 26
+        paddingTop: getStatusBarHeight() + 5
     },
     header:{
         flexDirection: 'row',
@@ -25,7 +27,7 @@ export const styles = StyleSheet.create({
         borderRadius: 35
     },
     title:{
-        fontSize: 18,
+        fontSize: adjust(18),
         fontFamily: theme.fonts.title400
     },
     greeting:{
@@ -41,12 +43,12 @@ export const styles = StyleSheet.create({
     },
     input:{
         flex: 1,
-        padding: 10,
+        padding: adjust(10),
         borderRadius: 25,
         borderWidth: 1, 
         borderColor: theme.colors.secondary10,
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: adjust(18),
         marginRight: 10,
         backgroundColor: '#ffffff'
     },

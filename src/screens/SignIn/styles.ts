@@ -2,6 +2,10 @@ import { StyleSheet } from "react-native"
 import { getStatusBarHeight } from "react-native-iphone-x-helper"
 import { theme } from "../../global/styles/theme"
 
+import { Dimensions } from "react-native"
+
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
@@ -10,8 +14,7 @@ export const styles = StyleSheet.create({
     },
     input:{
         width: '100%',
-        borderRadius: 8,
-        fontSize: 15,
+        fontSize: adjust(15),
         padding: 10,
         marginBottom: 15,
         borderBottomWidth: 1,
@@ -39,14 +42,13 @@ export const styles = StyleSheet.create({
     },
     buttonText:{
         color: '#ffffff',
-        fontSize: 18
+        fontSize: adjust(18)
     },
     header:{
-        marginHorizontal: 24,
         alignItems: 'center'
     },
     headerTitle:{
-        fontSize: 18
+        fontSize: adjust(18)
     },
     footer:{
         flexDirection: 'row',
@@ -55,10 +57,12 @@ export const styles = StyleSheet.create({
         marginTop: 30
     },
     footerLeftText:{
-        color: theme.colors.secondary15
+        color: theme.colors.secondary15,
+        fontSize: adjust(13)
     },
     link:{
-        color: theme.colors.link
+        color: theme.colors.link,
+        fontSize: adjust(13)
     },
     alertContainer:{
         flexDirection: 'row',
@@ -67,6 +71,7 @@ export const styles = StyleSheet.create({
     },
     alertText:{
         marginLeft: 5,
-        color: '#bdbdbd'
+        color: '#bdbdbd',
+        fontSize: adjust(15)
     }
 })

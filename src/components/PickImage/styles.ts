@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjustSpace, adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         width: '100%',
@@ -12,13 +14,13 @@ export const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: theme.colors.secondary10,
         overflow: 'hidden',
-        paddingRight: 15,
-        marginTop: 40
+        paddingRight: adjustSpace(15),
+        marginTop: adjustSpace(40)
     },
     title:{
         flex: 1,
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: adjust(18),
         color: theme.colors.secondary20
     },
     image:{

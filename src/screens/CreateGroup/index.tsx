@@ -44,25 +44,50 @@ export function CreateGroup(){
         })()
     }, [])
 
-    const addGroup = () => {
-        let randomId = uuid.v4()
+    const addGroup = async () => {
+        let keepCreating = true
+        let groupId = ''
 
         const reference = firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
         .doc('groups')
         .collection('my-groups')
 
-        reference.add({
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        while (keepCreating == true){
+            let randomId = uuid.v4()
+
+            const group = await firebase.firestore().collection('groups')
+            .doc(randomId)
+            
+            const groupDoc = await group.get()
+
+            if (!groupDoc.exists){
+                firebase.firestore().collection('groups')
+                .doc(randomId)
+                .set({
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    creator: firebase.auth().currentUser?.uid,
+                    everybodyCanPost,
+                    description,
+                    image,
+                    name
+                })
+
+                keepCreating = false
+                groupId = randomId
+            }
+        }
+
+        await reference.add({
+            groupId
+            /*timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             creator: firebase.auth().currentUser?.uid,
             everybodyCanPost,
             description,
             image,
-            name,
+            name*/
         })
 
         navigation.navigate('Grupos')
-
-        console.log(randomId)
     }
 
     const pickImage = async () => {
