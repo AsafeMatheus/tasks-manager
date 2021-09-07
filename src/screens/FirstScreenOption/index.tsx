@@ -53,18 +53,30 @@ export function FirstScreenOption(){
                 </SafeAreaView>
                 :
                 <SafeAreaView style={styles.container}>
-                    <Header
-                        title='Primeira tela'
+                    <View
+                        style={styles.spacement}
+                    >
+                        <Header
+                            title='Primeira tela'
+                        />
+
+                        <Text style={styles.description}>
+                            Ao ativar essa opção, toda vez que você ligar o seu celular,
+                            a primeira tela que você vai ver é a tela com as suas tarefas.
+                            O objetivo dessa opção é evitar que você esqueça de verificar
+                            suas tarefas. (obs: você poderá desativar essa opção a qualquer momento)
+                        </Text>
+                    </View>
+
+                    <AdMobBanner
+                        bannerSize="banner"
+                        adUnitID="ca-app-pub-3940256099942544/6300978111" 
+                        servePersonalizedAds 
+                        onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                        style={styles.smallAd}
                     />
 
-                    <Text style={styles.description}>
-                        Ao ativar essa opção, toda vez que você ligar o seu celular,
-                        a primeira tela que você vai ver é a tela com as suas tarefas.
-                        O objetivo dessa opção é evitar que você esqueça de verificar
-                        suas tarefas. (obs: você poderá desativar essa opção a qualquer momento)
-                    </Text>
-
-                    <View style={styles.footer}>
+                    <View style={[styles.footer, styles.spacement]}>
                         <Button
                             title={activated ? 'Desativar' : 'Ativar'}
                             onPress={() => setActivated(!activated)}

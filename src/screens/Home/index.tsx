@@ -13,6 +13,7 @@ import firebase from '../../config/firebaseconfig'
 
 import { NavigationModal } from "../../components/NavigationModal"
 import { SmallModal } from "../../components/SmallModal"
+import { LoadingHome } from "../LoadingHome"
 import { Task } from "../../components/Task"
 
 import { SimpleLineIcons } from '@expo/vector-icons'
@@ -21,11 +22,12 @@ import { AntDesign } from '@expo/vector-icons'
 import { theme } from "../../global/styles/theme"
 import { styles } from "./styles"
 
-export function Home({ navigation, route } : any){  
+export function Home({ navigation, route } : any){
     const [image, setImage] = useState('')  
     const [username, setUsername] = useState('')
 
     const [greeting, setGreeting] = useState('Hello')
+    const [loading, setLoading] = useState(true)
 
     const [navigationModalVisible, setNavigationModalVisible] = useState(false)
     const [finishedModalVisible, setFinishedModalVisible] = useState(false)
@@ -68,6 +70,17 @@ export function Home({ navigation, route } : any){
 
             setTasks(list)
         })
+        
+        if (firebase.auth().currentUser?.displayName == null){
+            setLoading(true)
+            setTimeout(() => {
+                setUsername(String(firebase.auth().currentUser?.displayName))
+                setLoading(false)
+            }, 5000)
+        } else {
+            setLoading(false)
+        }
+        
     }, [])
 
     const addNewTask = () => {
@@ -110,69 +123,67 @@ export function Home({ navigation, route } : any){
         setTimeout(() => setFinishedModalVisible(false), 1000)
     }
 
-    
-
     return(
-        <SafeAreaView style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.leftContent}>
-                    <Image
-                        style={styles.image}
-                        
-                        source={{ uri: `data:image/jpeg;base64,${image}` }}
-                    />
-                    <View style={styles.greeting}>
-                        <Text style={styles.title}>
-                            {greeting}
-                        </Text>
-                        <Text style={styles.title}>
-                            {username}!
-                        </Text>
+        <>
+            {
+                loading ?
+                <LoadingHome />
+                :
+            <SafeAreaView style={styles.container}>
+                <View style={styles.header}>
+                    <View style={styles.leftContent}>
+                        <Image
+                            style={styles.image}
+            
+                            source={{ uri: `data:image/jpeg;base64,${image}` }}
+                        />
+                        <View style={styles.greeting}>
+                            <Text style={styles.title}>
+                                {greeting}
+                            </Text>
+                            <Text style={styles.title}>
+                                {username}!
+                            </Text>
+                        </View>
                     </View>
+                    <TouchableOpacity onPress={() => setNavigationModalVisible(true)}>
+                        <SimpleLineIcons name="menu" size={30} color="black" />
+                    </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity onPress={() => setNavigationModalVisible(true)}>
-                    <SimpleLineIcons name="menu" size={30} color="black" />
-                </TouchableOpacity>
-            </View>
-
-            <FlatList
-                data={tasks}
-                keyExtractor={item => item.id}
-                renderItem={({item}) => <Task item={item} finished={() => finishTask(item)} deleted={() => deleteTask(item)}/>}
-                style={styles.tasksList}
-                showsVerticalScrollIndicator={false}
-            />
-
-            <View style={styles.inputWraper}>
-                <TextInput
-                    value={newTask}
-                    placeholder='Nova tarefa'
-                    onChangeText={text => setNewTask(text)}
-                    style={styles.input}
+                <FlatList
+                    data={tasks}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => <Task item={item} finished={() => finishTask(item)} deleted={() => deleteTask(item)}/>}
+                    style={styles.tasksList}
+                    showsVerticalScrollIndicator={false}
                 />
-
-                <TouchableOpacity activeOpacity={0.7} onPress={addNewTask}>
-                    <AntDesign name="pluscircle" size={45} color={theme.colors.highlight} />
-                </TouchableOpacity>
-            </View>
-
-            <SmallModal
-                title='deletado'
-                textColor='red'
-                visible={deleteModalVisible}
-            />
-
-            <SmallModal
-                title='concluido'
-                textColor='#388e3c'
-                visible={finishedModalVisible}
-            />
-
-            <NavigationModal 
-                closeView={() => setNavigationModalVisible(false)} 
-                visible={navigationModalVisible} 
-            />
-        </SafeAreaView>
+                <View style={styles.inputWraper}>
+                    <TextInput
+                        value={newTask}
+                        placeholder='Nova tarefa'
+                        onChangeText={text => setNewTask(text)}
+                        style={styles.input}
+                    />
+                    <TouchableOpacity activeOpacity={0.7} onPress={addNewTask}>
+                        <AntDesign name="pluscircle" size={45} color={theme.colors.highlight} />
+                    </TouchableOpacity>
+                </View>
+                <SmallModal
+                    title='deletado'
+                    textColor='red'
+                    visible={deleteModalVisible}
+                />
+                <SmallModal
+                    title='concluido'
+                    textColor='#388e3c'
+                    visible={finishedModalVisible}
+                />
+                <NavigationModal
+                    closeView={() => setNavigationModalVisible(false)}
+                    visible={navigationModalVisible}
+                />
+            </SafeAreaView>
+            }
+        </>
     )
 }

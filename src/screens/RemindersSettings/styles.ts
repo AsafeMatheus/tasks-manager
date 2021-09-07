@@ -8,8 +8,8 @@ export const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingHorizontal: 24,
-        paddingTop: getStatusBarHeight() + 26 
+        paddingHorizontal: adjust(24),
+        paddingTop: getStatusBarHeight() + adjust(26) 
     },
     description:{
         fontSize: adjust(18),
@@ -19,6 +19,6 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         width: '100%',
-        marginHorizontal: 24
+        marginHorizontal: adjust(24)
     }
 })

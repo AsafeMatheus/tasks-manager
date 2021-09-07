@@ -13,14 +13,14 @@ export const styles = StyleSheet.create({
     },
     ad:{
         width: '100%',
-        marginBottom: 20
+        marginBottom: adjust(20)
     },
     content:{
-        paddingHorizontal: 24,
+        paddingHorizontal: adjust(24),
         flex: 1
     },
     header:{
-        paddingHorizontal: 24
+        paddingHorizontal: adjust(24)
     },
     list:{
         marginBottom: 2

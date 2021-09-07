@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: theme.colors.background,
         paddingTop: getStatusBarHeight() + adjust(26),
-        paddingHorizontal: 24,
+        paddingHorizontal: adjust(24),
         paddingBottom: 70
     },
     image:{
@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         width: '100%',
-        marginHorizontal: 24
+        marginHorizontal: adjust(24)
     },
     logout:{
         flexDirection: 'row',

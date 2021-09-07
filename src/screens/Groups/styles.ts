@@ -7,7 +7,7 @@ import { adjust } from "../../global/functions"
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
-        paddingHorizontal: 24,
+        paddingHorizontal: adjust(24),
         paddingTop: getStatusBarHeight() + adjust(26),
         backgroundColor: theme.colors.background
     }

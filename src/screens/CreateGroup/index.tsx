@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react"
 import { 
-    SafeAreaView,
-    View,
     KeyboardAvoidingView,
-    Platform
+    SafeAreaView,
+    Dimensions,
+    Keyboard,
+    Platform,
+    View,
 } from "react-native"
 
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
@@ -26,12 +28,15 @@ setTestDeviceIDAsync('EMULATOR')
 
 export function CreateGroup(){
     const navigation = useNavigation()
+    const deviceHeight = Dimensions.get('window').height
 
     const [everybodyCanPost, setEverybodyCanPost] = useState(true)
     const [description, setDescription] = useState('')
     const [imageUrl, setImageUrl] = useState('')
     const [image, setImage] = useState('')
     const [name, setName] = useState('')
+
+    const [showButton, setShowButton] = useState(true)
 
     useEffect(() => {
         (async () => {
@@ -42,6 +47,14 @@ export function CreateGroup(){
             }
           }
         })()
+
+        Keyboard.addListener('keyboardDidShow', () => {
+            setShowButton(false)
+        })
+
+        Keyboard.addListener('keyboardDidHide', () => {
+            setShowButton(true)
+        })
     }, [])
 
     const addGroup = async () => {
@@ -140,21 +153,31 @@ export function CreateGroup(){
                     />
                 </View>
 
-                <AdMobBanner
-                    bannerSize="banner"
-                    adUnitID="ca-app-pub-3940256099942544/6300978111" 
-                    servePersonalizedAds 
-                    onDidFailToReceiveAdWithError={(err) => console.log(err)}
-                    style={styles.ad}
-                />
+                {
+                    deviceHeight >= 590 ?
+                    <AdMobBanner
+                        bannerSize="banner"
+                        adUnitID="ca-app-pub-3940256099942544/6300978111" 
+                        servePersonalizedAds 
+                        onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                        style={styles.ad}
+                    />
+                    :
+                    <View />
+                }
             </View>
 
-            <View style={[styles.footer, styles.content]}>
-                <Button
-                    title='Confirmar'
-                    onPress={addGroup}
-                />
-            </View>
+            {
+                showButton ?
+                <View style={[styles.footer, styles.content]}>
+                    <Button
+                        title='Confirmar'
+                        onPress={addGroup}
+                    />
+                </View>
+                :
+                <View />
+            }
         </SafeAreaView>
     )
 }

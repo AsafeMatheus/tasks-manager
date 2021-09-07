@@ -1,9 +1,9 @@
 import React, { useState } from "react"
 import { 
-    Text, 
-    View, 
+    TextInputProps, 
     TextInput,
-    TextInputProps 
+    Text, 
+    View 
 } from "react-native"
 
 import { theme } from "../../global/styles/theme"

@@ -74,12 +74,23 @@ export function Profile(){
 
             <View style={styles.content}>
                 <Text style={styles.text}>Email:</Text>
-                <Text style={styles.text}>{email}</Text>
+                <Text style={styles.text}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                >
+                    {email}
+                </Text>
             </View>
 
             <View style={styles.content}>
                 <Text style={styles.text}>Seu código:</Text>
-                <Text style={styles.text}>{currentUser?.uid}</Text>
+                <Text 
+                    style={styles.text}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                >
+                    {currentUser?.uid}
+                </Text>
             </View>
 
             <TouchableOpacity 

@@ -7,7 +7,7 @@ import { adjust } from "../../global/functions"
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
-        paddingHorizontal: 24,
+        paddingHorizontal: adjust(24),
         paddingTop: getStatusBarHeight() + adjust(26),
         paddingBottom: 80,
         backgroundColor: theme.colors.background
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
         width: '100%',
         position: 'absolute',
         bottom: adjust(24),
-        marginHorizontal: 24
+        marginHorizontal: adjust(24)
     },
     title:{
         fontSize: adjust(15),
@@ -41,7 +41,7 @@ export const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     alarmText:{
-        fontSize: 15,
+        fontSize: adjust(15),
         marginLeft: 10
     },
     colorView:{
@@ -64,6 +64,6 @@ export const styles = StyleSheet.create({
         width: '80%'
     },
     colorPickerText:{
-        fontSize: 15
+        fontSize: adjust(15)
     }
 })

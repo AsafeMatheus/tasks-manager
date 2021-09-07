@@ -78,7 +78,7 @@ export function CreateAgenda(){
             <Header
                 title='Criar agenda'
             />
-
+            
             <ScrollView
                 showsVerticalScrollIndicator={false}
             >

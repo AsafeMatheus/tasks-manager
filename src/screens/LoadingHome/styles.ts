@@ -24,18 +24,25 @@ export const styles = StyleSheet.create({
     image:{
         width: 70,
         height: 70,
-        borderRadius: 35
+        borderRadius: 35,
+        backgroundColor: theme.colors.secondary
     },
-    title:{
-        fontSize: adjust(18),
-        fontFamily: theme.fonts.title400
+    title1:{
+        backgroundColor: theme.colors.secondary,
+        width: 100,
+        height: 15,
+        marginBottom: 3
+    },
+    title2:{
+        backgroundColor: theme.colors.secondary,
+        width: 70,
+        height: 15
     },
     greeting:{
         marginLeft: adjust(20)
     },
     inputWraper:{
-        position: 'absolute',
-        bottom: 10,
+        marginBottom: 10,
         width: '100%',
         flexDirection: 'row',
         marginHorizontal: adjust(24),
@@ -43,16 +50,19 @@ export const styles = StyleSheet.create({
     },
     input:{
         flex: 1,
-        padding: adjust(10),
         borderRadius: 25,
-        borderWidth: 1, 
-        borderColor: theme.colors.secondary10,
-        textAlign: 'center',
-        fontSize: adjust(18),
         marginRight: 10,
-        backgroundColor: '#ffffff'
+        backgroundColor: theme.colors.secondary,
+        height: 47
     },
-    tasksList:{
-        marginBottom: 65
+    botton:{
+        position: 'absolute',
+        bottom: 0,
+        width: '100%'
+    },
+    navigation:{
+        backgroundColor: theme.colors.secondary,
+        width: '100%',
+        height: 48
     }
 })
