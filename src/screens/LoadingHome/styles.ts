@@ -28,9 +28,6 @@ export const styles = StyleSheet.create({
         backgroundColor: theme.colors.secondary
     },
     title1:{
-        backgroundColor: theme.colors.secondary,
-        width: 100,
-        height: 15,
         marginBottom: 3
     },
     title2:{
@@ -50,10 +47,7 @@ export const styles = StyleSheet.create({
     },
     input:{
         flex: 1,
-        borderRadius: 25,
         marginRight: 10,
-        backgroundColor: theme.colors.secondary,
-        height: 47
     },
     botton:{
         position: 'absolute',

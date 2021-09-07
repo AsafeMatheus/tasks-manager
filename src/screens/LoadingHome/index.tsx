@@ -4,6 +4,7 @@ import {
 } from "react-native"
 
 import { View as MotiView } from 'moti'
+import { Skeleton } from '@motify/skeleton'
 
 import { SimpleLineIcons } from "@expo/vector-icons"
 import { AntDesign } from "@expo/vector-icons"
@@ -17,15 +18,27 @@ export function LoadingHome(){
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.leftContent}>
-                        <MotiView
-                            style={styles.image}
-                            from={{ opacity: 0.2 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ type: 'timing' }}
+                        <Skeleton
+                            colorMode='light'
+                            width={70}
+                            height={70}
+                            radius={35}
                         />
+                        
                         <View style={styles.greeting}>
-                            <View style={styles.title1} />
-                            <View style={styles.title2} />
+                            <View style={styles.title1}>
+                                <Skeleton
+                                    colorMode='light'
+                                    width={100}
+                                    height={15}
+                                />
+                            </View>
+
+                            <Skeleton
+                                colorMode='light'
+                                width={80}
+                                height={15}
+                            />
                         </View>
                     </View>
                     <SimpleLineIcons
@@ -38,9 +51,15 @@ export function LoadingHome(){
                     style={styles.botton}
                 >
                     <View style={styles.inputWraper}>
-                        <View
-                            style={styles.input}
-                        />
+                        <View style={styles.input}>
+                            <Skeleton
+                                colorMode='light'
+                                width='100%'
+                                height={47}
+                                radius={25}
+                            />
+                        </View>
+
                         <AntDesign name="pluscircle" size={45} color={theme.colors.secondary} />
                     </View>
                 </View>

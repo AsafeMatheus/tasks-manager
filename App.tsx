@@ -18,12 +18,10 @@ export default function App() {
     return <AppLoading />
   }
 
-  /*return (
+  return (
     <>
       <StatusBar barStyle='dark-content' backgroundColor='transparent' translucent />
       <Routes />
     </>
-  )*/
-
-  return <LoadingHome />
+  )
 }
