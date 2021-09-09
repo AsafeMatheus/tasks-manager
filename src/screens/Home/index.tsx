@@ -127,62 +127,62 @@ export function Home({ navigation, route } : any){
         <>
             {
                 loading ?
-                <LoadingHome />
+                    <LoadingHome />
                 :
-            <SafeAreaView style={styles.container}>
-                <View style={styles.header}>
-                    <View style={styles.leftContent}>
-                        <Image
-                            style={styles.image}
-            
-                            source={{ uri: `data:image/jpeg;base64,${image}` }}
-                        />
-                        <View style={styles.greeting}>
-                            <Text style={styles.title}>
-                                {greeting}
-                            </Text>
-                            <Text style={styles.title}>
-                                {username}!
-                            </Text>
+                <SafeAreaView style={styles.container}>
+                    <View style={styles.header}>
+                        <View style={styles.leftContent}>
+                            <Image
+                                style={styles.image}
+                                source={{ uri: `data:image/jpeg;base64,${image}` }}
+                            />
+                            
+                            <View style={styles.greeting}>
+                                <Text style={styles.title}>
+                                    {greeting}
+                                </Text>
+                                <Text style={styles.title}>
+                                    {username}!
+                                </Text>
+                            </View>
                         </View>
+                        <TouchableOpacity onPress={() => setNavigationModalVisible(true)}>
+                            <SimpleLineIcons name="menu" size={30} color="black" />
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity onPress={() => setNavigationModalVisible(true)}>
-                        <SimpleLineIcons name="menu" size={30} color="black" />
-                    </TouchableOpacity>
-                </View>
-                <FlatList
-                    data={tasks}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => <Task item={item} finished={() => finishTask(item)} deleted={() => deleteTask(item)}/>}
-                    style={styles.tasksList}
-                    showsVerticalScrollIndicator={false}
-                />
-                <View style={styles.inputWraper}>
-                    <TextInput
-                        value={newTask}
-                        placeholder='Nova tarefa'
-                        onChangeText={text => setNewTask(text)}
-                        style={styles.input}
+                    <FlatList
+                        data={tasks}
+                        keyExtractor={item => item.id}
+                        renderItem={({item}) => <Task item={item} finished={() => finishTask(item)} deleted={() => deleteTask(item)}/>}
+                        style={styles.tasksList}
+                        showsVerticalScrollIndicator={false}
                     />
-                    <TouchableOpacity activeOpacity={0.7} onPress={addNewTask}>
-                        <AntDesign name="pluscircle" size={45} color={theme.colors.highlight} />
-                    </TouchableOpacity>
-                </View>
-                <SmallModal
-                    title='deletado'
-                    textColor='red'
-                    visible={deleteModalVisible}
-                />
-                <SmallModal
-                    title='concluido'
-                    textColor='#388e3c'
-                    visible={finishedModalVisible}
-                />
-                <NavigationModal
-                    closeView={() => setNavigationModalVisible(false)}
-                    visible={navigationModalVisible}
-                />
-            </SafeAreaView>
+                    <View style={styles.inputWraper}>
+                        <TextInput
+                            value={newTask}
+                            placeholder='Nova tarefa'
+                            onChangeText={text => setNewTask(text)}
+                            style={styles.input}
+                        />
+                        <TouchableOpacity activeOpacity={0.7} onPress={addNewTask}>
+                            <AntDesign name="pluscircle" size={45} color={theme.colors.highlight} />
+                        </TouchableOpacity>
+                    </View>
+                    <SmallModal
+                        title='deletado'
+                        textColor='red'
+                        visible={deleteModalVisible}
+                    />
+                    <SmallModal
+                        title='concluido'
+                        textColor='#388e3c'
+                        visible={finishedModalVisible}
+                    />
+                    <NavigationModal
+                        closeView={() => setNavigationModalVisible(false)}
+                        visible={navigationModalVisible}
+                    />
+                </SafeAreaView>
             }
         </>
     )
