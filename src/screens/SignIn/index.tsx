@@ -10,12 +10,15 @@ import {
 } from "react-native"
 
 import firebase from '../../config/firebaseconfig'
+import { adjust } from '../../global/functions/'
 
 import { Foundation } from '@expo/vector-icons'
+import { Ionicons } from '@expo/vector-icons'
 
 import { styles } from "./styles"
 
 export function SignIn({ navigation, route } : any){
+    const [hiddenPassword, setHiddenPassword] = useState(true)
     const [showHeader, setShowHeader] = useState(true)
     const [errorLogin, setErrorLogin] = useState('')
     const [password, setPassword] = useState('')
@@ -89,14 +92,30 @@ export function SignIn({ navigation, route } : any){
                     }}
                     placeholder='Email'
                 />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={text => {
-                        setPassword(text)
-                    }}
-                    placeholder='Senha'
-                    secureTextEntry
-                />
+
+                <View style={styles.inputPassword}>
+                    <TextInput
+                        style={styles.textInputPassword}
+                        onChangeText={text => {
+                            setPassword(text)
+                        }}
+                        placeholder='Senha'
+                        secureTextEntry={hiddenPassword}
+                    />
+
+                    <TouchableOpacity
+                        onPress={() =>{
+                            setHiddenPassword(!hiddenPassword)
+                        }}
+                    >
+                        {
+                            hiddenPassword ?
+                                <Ionicons name="eye-off" size={adjust(24)} color="black" />
+                            :
+                                <Ionicons name="eye" size={adjust(24)} color="black" />
+                        }
+                    </TouchableOpacity>
+                </View>
 
                 {
                     errorLogin 

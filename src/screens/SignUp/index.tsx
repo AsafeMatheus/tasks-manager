@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
-    ActivityIndicator,
     ScrollView,
     Platform,
     Alert,
-    Text, 
     View
 } from "react-native"
 
-import { Dimensions} from 'react-native'
-import * as ImagePicker from 'expo-image-picker'
 import firebase from '../../config/firebaseconfig'
+import * as ImagePicker from 'expo-image-picker'
+import { Dimensions} from 'react-native'
 import 'firebase/storage'
 import 'firebase/auth'
 
@@ -24,6 +22,8 @@ import { styles } from "./styles"
 
 export function SignUp({ navigation } : any){
     const [deviceHeight, setDeviceHeight] = useState(692)
+
+    const [hiddenPassword, setHiddenPassword] = useState(true)
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -107,6 +107,10 @@ export function SignUp({ navigation } : any){
                         <InputWithLabel
                             title='Senha'
                             set={setPassword}
+                            secureTextEntry={hiddenPassword}
+                            password
+                            hiddenPassword={hiddenPassword}
+                            setHiddenPassword={setHiddenPassword}
                         />
                         <InputWithLabel
                             title='Email'
@@ -155,6 +159,10 @@ export function SignUp({ navigation } : any){
                             <InputWithLabel
                                 title='Senha'
                                 set={setPassword}
+                                secureTextEntry={hiddenPassword}
+                                password
+                                hiddenPassword={hiddenPassword}
+                                setHiddenPassword={setHiddenPassword}
                             />
                             <InputWithLabel
                                 title='Email'

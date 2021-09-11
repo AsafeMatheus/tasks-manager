@@ -20,6 +20,16 @@ export const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.secondary10
     },
+    inputPassword:{
+        width: '100%',
+        padding: 10,
+        marginBottom: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.colors.secondary10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
     content:{
         flex: 1,
         alignItems: 'center',
@@ -72,6 +82,10 @@ export const styles = StyleSheet.create({
     alertText:{
         marginLeft: 5,
         color: '#bdbdbd',
+        fontSize: adjust(15)
+    },
+    textInputPassword:{
+        flex: 1,
         fontSize: adjust(15)
     }
 })
