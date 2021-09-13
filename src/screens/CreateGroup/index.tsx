@@ -22,6 +22,7 @@ import { TextArea } from "../../components/TextArea"
 import { Header } from "../../components/Header"
 import { Button } from "../../components/Button"
 
+import { adjust } from '../../global/functions'
 import { styles } from "./styles"
 
 setTestDeviceIDAsync('EMULATOR')
@@ -138,17 +139,24 @@ export function CreateGroup(){
                     />
                 </KeyboardAvoidingView>
 
-                <PickImage
-                    imageUrl={imageUrl}
-                    onPress={() => pickImage()}
-                />
+                <View 
+                    style={{
+                        marginTop: deviceHeight >= 590 ?
+                        0 : 15
+                    }}
+                >
+                    <PickImage
+                        imageUrl={imageUrl}
+                        onPress={() => pickImage()}
+                    />
+                </View>
 
                 <View style={styles.mark}>
                     <MarkOption
                         title={'Todos podem postar'}
                         set={() => setEverybodyCanPost(!everybodyCanPost)}
                         marked={everybodyCanPost}
-                        size={18}
+                        size={adjust(18)}
                         line={false}
                     />
                 </View>

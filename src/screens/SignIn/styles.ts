@@ -87,5 +87,10 @@ export const styles = StyleSheet.create({
     textInputPassword:{
         flex: 1,
         fontSize: adjust(15)
+    },
+    forgotPasswordText:{
+        fontSize: adjust(15),
+        color: '#dc2f02',
+        marginTop: 5
     }
 })

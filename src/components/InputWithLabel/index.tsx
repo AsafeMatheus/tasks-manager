@@ -66,9 +66,9 @@ export function InputWithLabel({
                         >
                             {
                                 hiddenPassword ?
-                                    <Ionicons name="eye-off" size={adjust(24)} color="black" />
-                                :
                                     <Ionicons name="eye" size={adjust(24)} color="black" />
+                                :
+                                    <Ionicons name="eye-off" size={adjust(24)} color="black" />
                             }
                         </TouchableOpacity>
                         :

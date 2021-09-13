@@ -23,9 +23,11 @@ import { theme } from "../../global/styles/theme"
 import { styles } from "./styles"
 
 export function Home({ navigation, route } : any){
-    const [image, setImage] = useState('')  
     const [username, setUsername] = useState('')
-
+    const [image, setImage] = useState('')  
+    
+    const userId = String(firebase.auth().currentUser?.uid)
+    
     const [greeting, setGreeting] = useState('Hello')
     const [loading, setLoading] = useState(true)
 
@@ -35,6 +37,10 @@ export function Home({ navigation, route } : any){
 
     const [tasks, setTasks] : any = useState([])
     const [newTask, setNewTask] = useState('')
+
+    const tasksList = firebase.firestore().collection(userId)
+    .doc("tasks")
+    .collection('tasks-list')
 
     useEffect(() => {
         const today = new Date()
@@ -48,7 +54,7 @@ export function Home({ navigation, route } : any){
             setGreeting('Boa noite,')
         }
 
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        firebase.firestore().collection(userId)
         .doc("profile-image")
         .onSnapshot((doc) => {
             let data =  doc.data()
@@ -57,9 +63,7 @@ export function Home({ navigation, route } : any){
 
         setUsername(String(firebase.auth().currentUser?.displayName))
 
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-        .doc("tasks")
-        .collection('tasks-list')
+        tasksList
         .orderBy('timestamp', 'desc')
         .onSnapshot((query) => {
             const list : any = []
@@ -84,9 +88,7 @@ export function Home({ navigation, route } : any){
     }, [])
 
     const addNewTask = () => {
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-        .doc('tasks')
-        .collection('tasks-list')
+        tasksList
         .add({
             desc: newTask,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -96,10 +98,7 @@ export function Home({ navigation, route } : any){
     }
 
     const deleteTask = (index:any) => {
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-        .doc('tasks')
-        .collection('tasks-list')
-        .doc(index.id).delete()
+        tasksList.doc(index.id).delete()
 
         setDeleteModalVisible(true)
         setTimeout(() => setDeleteModalVisible(false), 1000)
@@ -114,9 +113,7 @@ export function Home({ navigation, route } : any){
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
 
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-        .doc('tasks')
-        .collection('tasks-list')
+        tasksList
         .doc(item.id).delete()
 
         setFinishedModalVisible(true)

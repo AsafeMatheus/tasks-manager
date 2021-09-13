@@ -110,9 +110,9 @@ export function SignIn({ navigation, route } : any){
                     >
                         {
                             hiddenPassword ?
-                                <Ionicons name="eye-off" size={adjust(24)} color="black" />
-                            :
                                 <Ionicons name="eye" size={adjust(24)} color="black" />
+                            :
+                                <Ionicons name="eye-off" size={adjust(24)} color="black" />
                         }
                     </TouchableOpacity>
                 </View>
@@ -158,6 +158,16 @@ export function SignIn({ navigation, route } : any){
                         </Text>
                     </TouchableOpacity>
                 </View>
+
+                <TouchableOpacity 
+                    onPress={() => {
+                        navigation.navigate('ForgotPassword')
+                    }}
+                >
+                    <Text style={styles.forgotPasswordText}>
+                        Esqueceu a senha?
+                    </Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     )

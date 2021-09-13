@@ -9,6 +9,7 @@ import { CreateGroupAgenda } from "../screens/CreateGroupAgenda"
 import { FirstScreenOption } from "../screens/FirstScreenOption"
 import { RemindersSettings } from "../screens/RemindersSettings"
 import { CreateGroupTask } from "../screens/CreateGroupTask"
+import { ForgotPassword } from "../screens/ForgotPassword"
 import { CreateAgenda } from "../screens/CreateAgenda"
 import { GroupMembers } from "../screens/GroupMembers"
 import { TaskMembers } from "../screens/TaskMembers"
@@ -93,6 +94,10 @@ export function AuthRoutes(){
             <Screen
                 name='RemindersSettings'
                 component={ RemindersSettings }
+            />
+            <Screen
+                name='ForgotPassword'
+                component={ ForgotPassword }
             />
         </Navigator>
         </>
