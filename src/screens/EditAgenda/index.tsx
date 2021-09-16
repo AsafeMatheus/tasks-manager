@@ -59,9 +59,7 @@ export function EditAgenda({ navigation, route } : any){
             },
             { text: "Sim", onPress: () => {
                     if (data.groupAgenda){
-                        firebase.firestore().collection(data.groupCreator)
-                        .doc('groups')
-                        .collection('my-groups')
+                        firebase.firestore().collection('groups')
                         .doc(data.groupId)
                         .collection('agendas')
                         .doc(data.id).delete()
@@ -82,9 +80,7 @@ export function EditAgenda({ navigation, route } : any){
 
     const update = () => {
         if (data.groupAgenda){
-            firebase.firestore().collection(data.groupCreator)
-            .doc('groups')
-            .collection('my-groups')
+            firebase.firestore().collection('groups')
             .doc(data.groupId)
             .collection('agendas')
             .doc(data.id).set({

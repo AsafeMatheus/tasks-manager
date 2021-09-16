@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
+    ActivityIndicator,
     SafeAreaView,
     Dimensions,
     Keyboard,
@@ -22,6 +23,7 @@ import { TextArea } from "../../components/TextArea"
 import { Header } from "../../components/Header"
 import { Button } from "../../components/Button"
 
+import { theme } from "../../global/styles/theme"
 import { adjust } from '../../global/functions'
 import { styles } from "./styles"
 
@@ -37,6 +39,7 @@ export function CreateGroup(){
     const [image, setImage] = useState('')
     const [name, setName] = useState('')
 
+    const [loading, setLoading] = useState(false)
     const [showButton, setShowButton] = useState(true)
 
     useEffect(() => {
@@ -48,6 +51,8 @@ export function CreateGroup(){
             }
           }
         })()
+
+        setLoading(false)
 
         Keyboard.addListener('keyboardDidShow', () => {
             setShowButton(false)
@@ -61,6 +66,8 @@ export function CreateGroup(){
     const addGroup = async () => {
         let keepCreating = true
         let groupId = ''
+
+        setLoading(true)
 
         const reference = firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
         .doc('groups')
@@ -93,15 +100,11 @@ export function CreateGroup(){
 
         await reference.add({
             groupId
-            /*timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            creator: firebase.auth().currentUser?.uid,
-            everybodyCanPost,
-            description,
-            image,
-            name*/
         })
 
-        navigation.navigate('Grupos')
+        setTimeout(() => {
+            navigation.navigate('Grupos')
+        }, 3500)
     }
 
     const pickImage = async () => {
@@ -118,6 +121,14 @@ export function CreateGroup(){
             setImageUrl(result.uri)
         }
     }
+
+    if(loading){
+        return(
+            <View style={styles.loading}>
+                <ActivityIndicator size={50} color={theme.colors.highlight} />
+            </View>
+        )
+    }else{
 
     return(
         <SafeAreaView style={styles.container}>
@@ -188,4 +199,5 @@ export function CreateGroup(){
             }
         </SafeAreaView>
     )
+    }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { 
+    PixelRatio,
     StatusBar
 } from "react-native"
 
@@ -12,11 +13,14 @@ import { GroupAgenda } from "../screens/GroupAgenda"
 import { GroupTasks } from "../screens/GroupTasks"
 
 import { theme } from "../global/styles/theme"
+import { adjust } from '../global/functions'
 
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 
 export function GroupNavigation({navigation, route} : any){
     const { groupId, creatorId } = route.params
+
+    const pixelRatio = PixelRatio.get()
 
     const [description, setDescription] = useState('')
     const [image, setImage] = useState('')
@@ -24,9 +28,7 @@ export function GroupNavigation({navigation, route} : any){
     
     useEffect(() => {
         const mainFunction = () => {
-            const reference = firebase.firestore().collection(creatorId)
-            .doc('groups')
-            .collection('my-groups')
+            const reference = firebase.firestore().collection('groups')
             .doc(groupId)
 
             reference.get().then(doc => {   
@@ -72,7 +74,10 @@ export function GroupNavigation({navigation, route} : any){
                     indicatorStyle:{
                         backgroundColor: theme.colors.secondary10
                     },
-                    activeTintColor: theme.colors.secondary10
+                    activeTintColor: theme.colors.secondary10,
+                    labelStyle:{
+                        fontSize: pixelRatio <= 2 ? adjust(11) : adjust(18)
+                    }
                 }}
             >
                 <Screen

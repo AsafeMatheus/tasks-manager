@@ -20,9 +20,7 @@ export function GroupAgenda({ groupId, groupCreator } : Props){
     const [events, setEvents] : any = useState([])
 
     useEffect(() => {
-        firebase.firestore().collection(groupCreator)
-        .doc('groups')
-        .collection('my-groups')
+        firebase.firestore().collection('groups')
         .doc(groupId)
         .collection('agendas')
         .orderBy('timestamp', 'desc')

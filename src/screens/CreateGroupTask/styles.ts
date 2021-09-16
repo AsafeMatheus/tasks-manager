@@ -2,19 +2,20 @@ import { StyleSheet } from "react-native"
 import { getStatusBarHeight } from "react-native-iphone-x-helper"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingHorizontal: 24,
-        paddingTop: getStatusBarHeight() + 26
+        paddingTop: getStatusBarHeight() + adjust(26)
     },
     footer:{
         width: '100%',
         backgroundColor: theme.colors.background,
-        marginTop: 45
+        //marginTop: 45
     },
-    ad:{
-        marginTop: 35
+    spacement:{
+        paddingHorizontal: adjust(24)
     }
 })

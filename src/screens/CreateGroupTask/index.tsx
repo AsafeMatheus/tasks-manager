@@ -2,9 +2,9 @@ import React, { useState } from "react"
 import { 
     KeyboardAvoidingView,
     SafeAreaView,
+    Dimensions,
     StatusBar,
     Platform,
-    Alert,
     View
 } from "react-native"
 
@@ -15,6 +15,7 @@ import { InputWithLabel } from "../../components/InputWithLabel"
 import { Header } from "../../components/Header"
 import { Button } from "../../components/Button"
 
+import { adjust } from "../../global/functions"
 import { styles } from "./styles"
 
 setTestDeviceIDAsync('EMULATOR')
@@ -22,14 +23,14 @@ setTestDeviceIDAsync('EMULATOR')
 export function CreateGroupTask({ navigation, route } : any){
     const { groupId, groupCreator } = route.params
 
+    const deviceHeight = Dimensions.get('window').height
+
     const [amountOfPeople, setAmountOfPeople] = useState(0)
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
 
     const addTask = () => {
-        const ref = firebase.firestore().collection(groupCreator)
-        .doc('groups')
-        .collection('my-groups')
+        const ref = firebase.firestore().collection('groups')
         .doc(groupId)
         
         ref.collection('group-tasks')
@@ -51,6 +52,7 @@ export function CreateGroupTask({ navigation, route } : any){
             <StatusBar barStyle='dark-content' backgroundColor='transparent' translucent />
             <KeyboardAvoidingView 
                 behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+                style={styles.spacement}
             >
             <Header 
                 title='Nova tarefa'
@@ -76,18 +78,22 @@ export function CreateGroupTask({ navigation, route } : any){
             </KeyboardAvoidingView>
 
             <AdMobBanner
-                bannerSize="largeBanner"
+                bannerSize={ deviceHeight > 600 ? "largeBanner" : "banner"}
                 adUnitID="ca-app-pub-3940256099942544/6300978111" 
                 servePersonalizedAds 
                 onDidFailToReceiveAdWithError={(err) => console.log(err)}
-                style={styles.ad}
+                style={{
+                    marginTop: deviceHeight > 600 ? adjust(35) : adjust(15)
+                }}
             />
 
-            <View style={styles.footer}>
-                <Button
-                    title='Confirmar'
-                    onPress={ addTask }
-                />
+            <View style={styles.spacement}>
+                <View style={styles.footer}>
+                    <Button
+                        title='Confirmar'
+                        onPress={ addTask }
+                    />
+                </View>
             </View>
         </SafeAreaView>
     )

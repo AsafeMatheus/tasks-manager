@@ -1,28 +1,38 @@
 import { StyleSheet } from "react-native"
+import { theme } from "../../global/styles/theme"
+
+import { adjust } from '../../global/functions'
 
 export const styles = StyleSheet.create({
     container:{
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginBottom: 10
+        marginBottom: adjust(10)
     },
     image:{
-        width: 70,
-        height: 70,
-        borderRadius: 35
+        width: adjust(70),
+        height: adjust(70),
+        borderRadius: adjust(35)
     },
     leftContent:{
         flexDirection: 'row',
         alignItems: 'center'
     },
     title:{
-        fontSize: 18
+        fontSize: adjust(18)
     },
     information:{
-        marginLeft: 10
+        marginLeft: adjust(10)
     },
     members:{
-        fontSize: 15
+        fontSize: adjust(15)
+    },
+    imageWithBorder:{
+        width: adjust(70),
+        height: adjust(70),
+        borderRadius: adjust(35),
+        borderWidth: 2,
+        borderColor: theme.colors.secondary
     }
 })

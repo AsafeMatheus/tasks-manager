@@ -25,5 +25,10 @@ export const styles = StyleSheet.create({
     },
     mark:{
         marginTop: adjust(35)
+    },
+    loading:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })

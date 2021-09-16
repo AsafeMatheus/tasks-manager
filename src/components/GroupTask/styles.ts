@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native"
 import { theme } from "../../global/styles/theme"
 
+import { adjust } from "../../global/functions"
+
 export const styles = StyleSheet.create({
     container:{
         width: '100%',
@@ -13,11 +15,11 @@ export const styles = StyleSheet.create({
         marginBottom: 20
     },
     title:{
-        fontSize: 18
+        fontSize: adjust(18)
     },
     date:{
-        fontSize: 13,
-        marginTop: 8
+        fontSize: adjust(13),
+        marginTop: adjust(8)
     },
     memberImage:{
         width: 30,
@@ -40,6 +42,6 @@ export const styles = StyleSheet.create({
         borderLeftColor: theme.colors.secondary10
     },
     participate:{
-        fontSize: 13
+        fontSize: adjust(13)
     }
 })

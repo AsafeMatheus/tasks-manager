@@ -24,9 +24,7 @@ export function GroupTasks({ groupId, groupCreator } : Props){
     const username = String(firebase.auth().currentUser?.displayName)
     const userId = String(firebase.auth().currentUser?.uid)
 
-    const ref = firebase.firestore().collection(groupCreator)
-    .doc('groups')
-    .collection('my-groups')
+    const ref = firebase.firestore().collection('groups')
     .doc(groupId)
 
     useEffect(() => {

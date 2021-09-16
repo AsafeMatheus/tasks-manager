@@ -14,39 +14,69 @@ import { styles } from "./styles"
 export function Groups(){
     const navigation = useNavigation()
 
+    const userId = String(firebase.auth().currentUser?.uid)
+
     const [groups, setGroups] : any = useState([])
     const [groupsIdsState, setGroupsIdsState] = useState([])
 
-    useEffect(() => {
-        const userId = String(firebase.auth().currentUser?.uid)
+    const getTheDataOfEachGroup = () => {
+        const listOfGroups : any = []
 
+        groupsIdsState.forEach((groupId) => {
+            firebase.firestore().collection('groups')
+            .doc(groupId)
+            .get()
+            .then((response) => {
+                listOfGroups.push({
+                    id: response.id,
+                    ...response.data()
+                })
+
+                setGroups(listOfGroups)
+            }).catch((err) => {
+                console.log(err)
+            })
+        })
+    }
+
+    useEffect(() => {
         firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
         .onSnapshot((myGroupsIds) => {
             const listOfGroupsIds : any = []
+            let listOfGroups : any = []
 
             myGroupsIds.forEach((oneGroupId) => {
-                firebase.firestore().collection('groups')
-                .doc(oneGroupId.data().groupId)
-                .get()
-                .then((response) => {
-                    listOfGroupsIds.push({
-                        id: oneGroupId.data().groupId,
-                        ...response.data()
-                    })
-                })
-                .catch((err) => console.log(err))
+                listOfGroupsIds.push(oneGroupId.data().groupId)
             })
 
-            setGroups(listOfGroupsIds)
+            listOfGroupsIds.forEach((groupId : any) => {
+                firebase.firestore().collection('groups')
+                .doc(groupId)
+                .get()
+                .then((response) => {
+                    listOfGroups = [
+                        ...listOfGroups, 
+                        {
+                            id: response.id,
+                        ...response.data()
+                        }
+                    ]
+
+                    setGroups(listOfGroups)
+                }).catch((err) => {
+                    console.log(err)
+                })
+            })
+            setGroupsIdsState(listOfGroupsIds)
         })
     }, [])
 
     return(
         <SafeAreaView style={styles.container}>
             <Header
-                title={groups.length}
+                title='Grupos'
                 action={
                     <AddButton
                         onPress={() => navigation.navigate('CreateGroup')} 
@@ -64,7 +94,7 @@ export function Groups(){
                             onPress={() => {
                                 navigation.navigate('GroupNavigation', {
                                     groupId: item.id,
-                                    creatorId: 'sdfsd'
+                                    creatorId: item.creator
                                 })
                             }}
                         />

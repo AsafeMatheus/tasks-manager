@@ -1,9 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
     TouchableOpacity,
     SafeAreaView, 
+    ScrollView,
     StatusBar, 
+    Keyboard,
     Platform,
     View, 
     Text
@@ -39,11 +41,20 @@ export function CreateGroupAgenda({route} : any){
     const [day, setDay] = useState('')
 
     const [colorModal, setColorModal] = useState(false)
+    const [showButton, setShowButton] = useState(true)
+
+    useEffect(() => {
+        Keyboard.addListener("keyboardDidShow", () => {
+            setShowButton(false)
+        })
+
+        Keyboard.addListener("keyboardDidHide", () => {
+            setShowButton(true)
+        })
+    }, [])
     
     const addGroupAgenda = () => {
-        firebase.firestore().collection(groupCreator)
-        .doc('groups')
-        .collection('my-groups')
+        firebase.firestore().collection('groups')
         .doc(groupId)
         .collection('agendas')
         .add({
@@ -73,78 +84,82 @@ export function CreateGroupAgenda({route} : any){
                 title='Criar agenda'
             />
 
-            <KeyboardAvoidingView 
-                behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+            <ScrollView
+                showsVerticalScrollIndicator={false}
             >
-                <InputWithLabel 
-                    title='Título'
-                    set={setTitle}
-                />
-
-                <InputWithLabel 
-                    title='Local'
-                    set={setPlace}
-                />
-
-                <View style={styles.time}>
-                    <View>
-                        <Text style={styles.title}>Dia e mês:</Text>
-                        <View style={styles.smallInputs}>
-                            <SmallInput set={setDay} />
-                            <Text style={styles.separator}>/</Text>
-                            <SmallInput set={setMonth} />
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios'? 'padding' : 'position'}
+                >
+                    <InputWithLabel
+                        title='Título'
+                        set={setTitle}
+                    />
+                    <InputWithLabel
+                        title='Local'
+                        set={setPlace}
+                    />
+                    <View style={styles.time}>
+                        <View>
+                            <Text style={styles.title}>Dia e mês:</Text>
+                            <View style={styles.smallInputs}>
+                                <SmallInput set={setDay} />
+                                <Text style={styles.separator}>/</Text>
+                                <SmallInput set={setMonth} />
+                            </View>
+                        </View>
+                        <View>
+                            <Text style={styles.title}>Horário:</Text>
+                            <View style={styles.smallInputs}>
+                                <SmallInput set={setHour} />
+                                <Text style={styles.separator}>:</Text>
+                                <SmallInput set={setMinute} />
+                            </View>
                         </View>
                     </View>
-
-                    <View>
-                        <Text style={styles.title}>Horário:</Text>
-                        <View style={styles.smallInputs}>
-                            <SmallInput set={setHour} />
-                            <Text style={styles.separator}>:</Text>
-                            <SmallInput set={setMinute} />
-                        </View>
+                </KeyboardAvoidingView>
+                <TouchableOpacity
+                    style={styles.pickColor}
+                    activeOpacity={0.7}
+                    onPress={() => setColorModal(true)}
+                >
+                    <View style={[styles.colorView, {backgroundColor: color}]} />
+                    <View style={styles.colorPickerTextContainer}>
+                        <Text style={styles.colorPickerText}>Escolher cor</Text>
                     </View>
-                </View>
-            </KeyboardAvoidingView>
-
-            <TouchableOpacity
-                style={styles.pickColor}
-                activeOpacity={0.7}
-                onPress={() => setColorModal(true)}
-            >
-                <View style={[styles.colorView, {backgroundColor: color}]} />
-                <View style={styles.colorPickerTextContainer}>
-                    <Text style={styles.colorPickerText}>Escolher cor</Text>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+                {
+                    remember ?
+                    <TouchableOpacity
+                        style={styles.alarm}
+                        onPress={() => setRemember(!remember)}
+                    >
+                        <FontAwesome5 name="bell" size={24} color="black" />
+                        <Text style={styles.alarmText}>Desativar</Text>
+                    </TouchableOpacity>
+                    :
+                    <TouchableOpacity
+                        style={styles.alarm}
+                        onPress={() => setRemember(!remember)}
+                    >
+                        <FontAwesome5 name="bell-slash" size={24} color="black" />
+                        <Text style={styles.alarmText}>Ativar</Text>
+                    </TouchableOpacity>
+                }
+            </ScrollView>
 
             {
-                remember ?
-                <TouchableOpacity 
-                    style={styles.alarm}
-                    onPress={() => setRemember(!remember)}
-                >
-                    <FontAwesome5 name="bell" size={24} color="black" />
-                    <Text style={styles.alarmText}>Desativar</Text>
-                </TouchableOpacity>
+                showButton ? 
+                <View style={styles.footer}>
+                    <Button
+                        title='Confirmar'
+                        onPress={() => {
+                            addGroupAgenda()
+                        }}
+                    />
+                </View>
                 :
-                <TouchableOpacity 
-                    style={styles.alarm}
-                    onPress={() => setRemember(!remember)}
-                >
-                    <FontAwesome5 name="bell-slash" size={24} color="black" />
-                    <Text style={styles.alarmText}>Ativar</Text>
-                </TouchableOpacity>
+                <></>
             }
-
-            <View style={styles.footer}>
-                <Button
-                    title='Confirmar'
-                    onPress={() => {
-                        addGroupAgenda()
-                    }}
-                />
-            </View>
 
             <PickColorModal
                 visible={colorModal}
