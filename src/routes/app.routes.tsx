@@ -12,6 +12,7 @@ import { CreateGroupTask } from "../screens/CreateGroupTask"
 import { ForgotPassword } from "../screens/ForgotPassword"
 import { CreateAgenda } from "../screens/CreateAgenda"
 import { GroupMembers } from "../screens/GroupMembers"
+import { GroupInvite } from "../screens/GroupInvite"
 import { TaskMembers } from "../screens/TaskMembers"
 import { EditAccount } from "../screens/EditAccount"
 import { CreateGroup } from "../screens/CreateGroup"
@@ -98,6 +99,10 @@ export function AuthRoutes(){
             <Screen
                 name='ForgotPassword'
                 component={ ForgotPassword }
+            />
+            <Screen
+                name='GroupInvite'
+                component={ GroupInvite }
             />
         </Navigator>
         </>

@@ -13,6 +13,7 @@ import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
 import { useNavigation } from "@react-navigation/native"
 import firebase from "../../config/firebaseconfig"
 import * as ImagePicker from 'expo-image-picker'
+import * as Linking from 'expo-linking'
 import 'react-native-get-random-values'
 const uuid = require('uuid')
 
@@ -82,15 +83,30 @@ export function CreateGroup(){
             const groupDoc = await group.get()
 
             if (!groupDoc.exists){
+                let linkToTheGroup = Linking.createURL('exp://192.168.15.7:19000', {
+                    queryParams:{
+                        groupId: randomId,
+                        group: true
+                    }
+                })
+
                 firebase.firestore().collection('groups')
                 .doc(randomId)
                 .set({
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     creator: firebase.auth().currentUser?.uid,
                     everybodyCanPost,
+                    linkToTheGroup,
                     description,
                     image,
                     name
+                })
+
+                firebase.firestore().collection('groups')
+                .doc(randomId)
+                .collection('members')
+                .add({
+                    userId: String(firebase.auth().currentUser?.uid)
                 })
 
                 keepCreating = false

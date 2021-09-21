@@ -18,11 +18,13 @@ export function MainNavigation(){
     return(
         <>
         <StatusBar barStyle='dark-content' backgroundColor='transparent' translucent />
-        <Navigator tabBarOptions={{
-            showLabel: false, 
-            keyboardHidesTabBar: true,
-            activeBackgroundColor: 'rgba(52, 52, 52, 0.1)'
-        }}>
+        <Navigator 
+            tabBarOptions={{
+                showLabel: false, 
+                keyboardHidesTabBar: true,
+                activeBackgroundColor: 'rgba(52, 52, 52, 0.1)'
+            }}
+        >
             <Screen
                 name='Home'
                 component={Home}

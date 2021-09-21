@@ -44,7 +44,7 @@ export function Member({ data, deleteMember } : Props){
             <View style={styles.leftContent}>
                 <Image 
                     style={styles.image}
-                    source={{ uri: data.image }}
+                    source={{ uri: `data:image/jpeg;base64,${data.image}` }}
                 />
                 <Text style={styles.title}>
                     { data.username }

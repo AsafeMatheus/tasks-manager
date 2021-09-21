@@ -7,6 +7,7 @@ import {
 } from "react-native"
 
 import firebase from "../../config/firebaseconfig"
+import * as Linking from 'expo-linking'
 
 import { Button } from "../../components/Button"
 
@@ -19,7 +20,19 @@ export function Opening({navigation} : any){
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged((authUser) => {
             if (authUser) {
-                navigation.replace('MainNavigation')
+                Linking.getInitialURL().then((ev) => {
+                    if (ev){
+                      let dataFromLinking = Linking.parse(ev)
+                      
+                      if (dataFromLinking.queryParams.group == 'true'){
+                        navigation.replace('GroupInvite', {
+                            groupId: dataFromLinking.queryParams.groupId
+                        })
+                      } else{
+                        navigation.replace('MainNavigation')
+                      }
+                    }
+                  }).catch((err) => console.log('An error ocurred: ' + err))
             } else{
                 setLoading(false)
             }

@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "tasksmanager",
     "name": "tasks-manager",
     "slug": "tasks-manager",
     "version": "1.0.0",

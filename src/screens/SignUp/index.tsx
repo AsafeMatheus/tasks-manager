@@ -67,7 +67,13 @@ export function SignUp({ navigation } : any){
                 displayName: username
             })
             
-            firebase.firestore().collection(String(user?.uid)).doc('profile-image').set({avatar: image})
+            firebase.firestore().collection(String(user?.uid))
+            .doc('profile-image')
+            .set({avatar: image})
+
+            firebase.firestore().collection(String(user?.uid))
+            .doc('username')
+            .set({username})
 
             navigation.reset({
                 index: 0,
