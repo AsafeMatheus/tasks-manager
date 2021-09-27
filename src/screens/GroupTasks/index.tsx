@@ -10,11 +10,10 @@ import { Button } from "../../components/Button"
 import { styles } from "./styles"
 
 type Props = {
-    groupId: string,
-    groupCreator: string
+    groupId: string
 }
 
-export function GroupTasks({ groupId, groupCreator } : Props){
+export function GroupTasks({ groupId } : Props){
     const navigation = useNavigation()
 
     const [userImage, setUserImage] = useState('')
@@ -113,8 +112,7 @@ export function GroupTasks({ groupId, groupCreator } : Props){
                     title='Nova tarefa'
                     onPress={() => {
                         navigation.navigate('CreateGroupTask', {
-                            groupId,
-                            groupCreator
+                            groupId
                         })
                     }}
                 />

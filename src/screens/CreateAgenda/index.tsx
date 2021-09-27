@@ -49,10 +49,6 @@ export function CreateAgenda(){
         })
     }, [])
 
-    const closeColorModal = () => {
-        setColorModal(false)
-    }
-
     const addAgenda = () => {
         firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
         .doc('agendas')
@@ -156,7 +152,9 @@ export function CreateAgenda(){
             
             <PickColorModal
                 visible={colorModal}
-                closeModal={closeColorModal}
+                closeModal={() => {
+                    setColorModal(false)
+                }}
                 set={setColor}
             />
         </SafeAreaView>

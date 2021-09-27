@@ -65,6 +65,9 @@ export function CreateGroup(){
     }, [])
 
     const addGroup = async () => {
+        // The purpose of this function is to create a group with a random id
+        // that doesn't exist yet
+
         let keepCreating = true
         let groupId = ''
 
@@ -74,6 +77,7 @@ export function CreateGroup(){
         .doc('groups')
         .collection('my-groups')
 
+        // if there is a group with the created random id its goint to keep creating
         while (keepCreating == true){
             let randomId = uuid.v4()
 
@@ -90,6 +94,7 @@ export function CreateGroup(){
                     }
                 })
 
+                // Setting the group with its data
                 firebase.firestore().collection('groups')
                 .doc(randomId)
                 .set({
@@ -102,6 +107,7 @@ export function CreateGroup(){
                     name
                 })
 
+                // Adding the creator to the list of members
                 firebase.firestore().collection('groups')
                 .doc(randomId)
                 .collection('members')
@@ -114,6 +120,7 @@ export function CreateGroup(){
             }
         }
 
+        // Adding the created group to the creator groups list
         await reference.add({
             groupId
         })
@@ -128,7 +135,7 @@ export function CreateGroup(){
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [4, 3],
-          quality: 1,
+          quality: 0.6,
           base64: true
         })
     
@@ -194,7 +201,7 @@ export function CreateGroup(){
                         bannerSize="banner"
                         adUnitID="ca-app-pub-3940256099942544/6300978111" 
                         servePersonalizedAds 
-                        onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                        onDidFailToReceiveAdWithError={(err) => null}
                         style={styles.ad}
                     />
                     :

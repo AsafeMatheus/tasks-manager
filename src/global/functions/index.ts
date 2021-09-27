@@ -1,5 +1,8 @@
 import { PixelRatio, Dimensions} from 'react-native'
 import { AdMobInterstitial } from "expo-ads-admob"
+import { Alert } from 'react-native'
+
+import firebase from '../../config/firebaseconfig'
 
 export const globalFunctions = {
     handleInterstitialAd: async () => {
@@ -73,4 +76,17 @@ export const adjustSpace = (space: number) => {
     } else{
         return space
     }
+}
+
+export const sendEmail = (email : any, okFunction : () => void) => {
+    firebase.auth().sendPasswordResetEmail(email)
+    .then(() => {
+        Alert.alert('Email enviado', 'enviamos um email de redefinição de senha para o endereço: ' + email),
+        [{
+            text: "ok",
+            onPress: () => okFunction()
+        }]
+    }).catch((err) => {
+        Alert.alert(err.message)
+    })
 }

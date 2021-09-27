@@ -21,7 +21,7 @@ import { styles } from "./styles"
 setTestDeviceIDAsync('EMULATOR')
 
 export function CreateGroupTask({ navigation, route } : any){
-    const { groupId, groupCreator } = route.params
+    const { groupId } = route.params
 
     const deviceHeight = Dimensions.get('window').height
 
@@ -41,8 +41,7 @@ export function CreateGroupTask({ navigation, route } : any){
             date
         })
 
-        navigation.navigate('GroupNavigation', { 
-            creatorId: groupCreator,
+        navigation.navigate('GroupNavigation', {
             groupId
         })
     }
@@ -81,7 +80,7 @@ export function CreateGroupTask({ navigation, route } : any){
                 bannerSize={ deviceHeight > 600 ? "largeBanner" : "banner"}
                 adUnitID="ca-app-pub-3940256099942544/6300978111" 
                 servePersonalizedAds 
-                onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                onDidFailToReceiveAdWithError={(err) => null}
                 style={{
                     marginTop: deviceHeight > 600 ? adjust(35) : adjust(15)
                 }}

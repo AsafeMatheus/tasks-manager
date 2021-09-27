@@ -18,7 +18,7 @@ import { adjust } from '../global/functions'
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 
 export function GroupNavigation({navigation, route} : any){
-    const { groupId, creatorId } = route.params
+    const { groupId } = route.params
 
     const pixelRatio = PixelRatio.get()
 
@@ -35,18 +35,16 @@ export function GroupNavigation({navigation, route} : any){
                 setDescription(doc.data()?.description)
                 setImage(doc.data()?.image)
                 setName(doc.data()?.name)
-            }).catch((err) => console.log(err))
+            }).catch(() => null)
         } 
 
         return mainFunction()
-        
     }, [])
 
     function GroupTasksComponent(){
         return(
             <GroupTasks 
                 groupId={groupId}
-                groupCreator={creatorId}
             />
         )
     }
@@ -55,7 +53,6 @@ export function GroupNavigation({navigation, route} : any){
         return(
             <GroupAgenda 
                 groupId={groupId}
-                groupCreator={creatorId}
             />
         )
     }

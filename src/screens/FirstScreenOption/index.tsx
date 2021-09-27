@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { 
     SafeAreaView,
-    ScrollView,
     Dimensions,
     Text,
     View 
@@ -40,7 +39,7 @@ export function FirstScreenOption(){
                         bannerSize="largeBanner"
                         adUnitID="ca-app-pub-3940256099942544/6300978111" 
                         servePersonalizedAds 
-                        onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                        onDidFailToReceiveAdWithError={(err) => null}
                         style={styles.ad}
                     />
 
@@ -72,7 +71,7 @@ export function FirstScreenOption(){
                         bannerSize="banner"
                         adUnitID="ca-app-pub-3940256099942544/6300978111" 
                         servePersonalizedAds 
-                        onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                        onDidFailToReceiveAdWithError={(err) => null}
                         style={styles.smallAd}
                     />
 

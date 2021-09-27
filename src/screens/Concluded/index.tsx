@@ -43,6 +43,25 @@ export function Concluded(){
         .doc(index.id).delete()
     }
 
+    const deleteEverything = () => {
+        globalFunctions.handleInterstitialAd()
+
+        const ref = firebase.firestore()
+        .collection(String(firebase.auth().currentUser?.uid))
+        .doc('concluded-tasks')
+        .collection('concluded-list')
+
+        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+        .doc('concluded-tasks')
+        .collection('concluded-list')
+        .get()
+        .then(res => {
+            res.forEach((doc) => {
+                ref.doc(doc.id).delete()
+            })
+        })
+    }
+
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -55,7 +74,7 @@ export function Concluded(){
                 bannerSize="smartBannerLandscape"
                 adUnitID="ca-app-pub-3940256099942544/6300978111" 
                 servePersonalizedAds 
-                onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                onDidFailToReceiveAdWithError={(err) => null}
                 style={styles.ad}
             />
 
@@ -77,24 +96,7 @@ export function Concluded(){
                 
                 <Button
                     title='Apagar tudo'
-                    onPress={() => {
-                        globalFunctions.handleInterstitialAd()
-
-                        const ref = firebase.firestore()
-                        .collection(String(firebase.auth().currentUser?.uid))
-                        .doc('concluded-tasks')
-                        .collection('concluded-list')
-
-                        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-                        .doc('concluded-tasks')
-                        .collection('concluded-list')
-                        .get()
-                        .then(res => {
-                            res.forEach((doc) => {
-                                ref.doc(doc.id).delete()
-                            })
-                        })
-                    }}
+                    onPress={deleteEverything}
                 />
             </View>
         </SafeAreaView>

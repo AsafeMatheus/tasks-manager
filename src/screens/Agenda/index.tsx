@@ -48,8 +48,7 @@ export function Agenda(){
                         <Appointment 
                             data={item} 
                             onPress={() => {
-                                navigation.navigate('EditAgenda', {item})
-                                console.log(item)
+                                navigation.navigate('EditAgenda', { item })
                             }}
                         />
                     )

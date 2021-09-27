@@ -22,15 +22,17 @@ export function Opening({navigation} : any){
             if (authUser) {
                 Linking.getInitialURL().then((ev) => {
                     if (ev){
-                      let dataFromLinking = Linking.parse(ev)
+                        let dataFromLinking = Linking.parse(ev)
                       
-                      if (dataFromLinking.queryParams.group == 'true'){
-                        navigation.replace('GroupInvite', {
-                            groupId: dataFromLinking.queryParams.groupId
-                        })
-                      } else{
-                        navigation.replace('MainNavigation')
-                      }
+                        if (dataFromLinking.queryParams.group == 'true'){
+                            navigation.replace('GroupInvite', {
+                                groupId: dataFromLinking.queryParams.groupId
+                            })
+                        }
+
+                        if (!dataFromLinking.queryParams.group){
+                            navigation.navigate('MainNavigation')
+                        }
                     }
                   }).catch((err) => console.log('An error ocurred: ' + err))
             } else{

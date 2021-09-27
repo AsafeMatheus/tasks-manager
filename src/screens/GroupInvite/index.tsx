@@ -3,6 +3,7 @@ import {
     ActivityIndicator,
     SafeAreaView,
     FlatList,
+    Alert,
     View
 } from "react-native"
 
@@ -23,8 +24,13 @@ export function GroupInvite({ navigation, route } : any){
 
     const [groupName, setGroupName] = useState('')
     const [loading, setLoading] = useState(false)
+    const [alreadyAMember, setAlreadyAMember] = useState(false)
 
     const [members, setMembers] : any = useState([])
+
+    const myGroupsReference = firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
+    .doc('groups')
+    .collection('my-groups')
 
     useEffect(() => {
         setLoading(false)
@@ -53,7 +59,6 @@ export function GroupInvite({ navigation, route } : any){
                     .doc('username')
                     .get()
                     .then((responseUsername) => {
-                        console.log(responseImage.data())
                         listOfMembers.push({
                             id: memberId.data()?.userId,
                             username: responseUsername.data()?.username,
@@ -64,26 +69,60 @@ export function GroupInvite({ navigation, route } : any){
                     })
                 })
             })
+
+            myGroupsReference.onSnapshot((myGroups) => {
+                myGroups.forEach((myGroup) => {
+                    let myGroupId = myGroup.data().groupId
+
+                    if (groupId == myGroupId){
+                        setAlreadyAMember(true)
+                    }
+                })
+            })
+
         })
     }, [])
 
     const participate = () => {
-        setLoading(true)
+        if (alreadyAMember){
+            Alert.alert(`${groupName}`, 'Você já faz parte desse grupo. Deseja ir para página de grupos', [
+                {
+                    text: 'sim',
+                    onPress: () => {
+                        navigation.navigate('MainNavigation', {
+                            screen: 'Grupos'
+                        })
+                    }
+                },
+                {
+                    text: 'não',
+                    onPress: () => null
+                }
+            ])
+        } else{
+            setLoading(true)
 
-        firebase.firestore().collection(String(firebase.auth().currentUser?.uid))
-        .doc('groups')
-        .collection('my-groups')
-        .add({
-            groupId
-        })
-
-        setTimeout(() => {
-            navigation.navigate('MainNavigation', {
-                screen: 'Grupos'
+            myGroupsReference
+            .add({
+                groupId
             })
-        }, 3500)
-    }
 
+            firebase.firestore().collection('groups')
+            .doc(groupId)
+            .collection('members')
+            .add({
+                userId: String(firebase.auth().currentUser?.uid)
+            })
+
+            setTimeout(() => {
+                navigation.navigate('MainNavigation', {
+                    screen: 'Grupos'
+                })
+
+                setLoading(false)
+            }, 3500)
+        }
+    }
 
     if(loading){
         return(

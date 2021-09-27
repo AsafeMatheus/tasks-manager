@@ -13,6 +13,7 @@ import {
 
 import { useNavigation } from '@react-navigation/native'
 import firebase from "../../config/firebaseconfig"
+import { sendEmail } from "../../global/functions"
 import * as ImagePicker from 'expo-image-picker'
 
 import { InputWithLabel } from "../../components/InputWithLabel"
@@ -68,7 +69,7 @@ export function EditAccount(){
           allowsEditing: true,
           aspect: [4, 3],
           base64: true,
-          quality: 1,
+          quality: 0.6,
         })
     
         if (!result.cancelled) {
@@ -100,23 +101,25 @@ export function EditAccount(){
         await setLoading(false)
     }
 
+    const okFunction = () => {
+        setLoading(true)
+        navigation.navigate('Opening')
+        setLoading(false)
+    }
+
     const resetPassword = () => {
-        firebase.auth().sendPasswordResetEmail(String(currentUser?.email))
-        .then(() => {
-            Alert.alert('Email enviado', 'enviamos um email de redefinição de senha para o endereço: ' + String(currentUser?.email)),
-            [{
-                text: "ok",
+        Alert.alert('Enviar email', 'Ao clicar em ok um email de redefinição de senha será enviado para o endereço: ' + String(currentUser?.email), [
+            {
+                text: 'Ok',
                 onPress: () => {
-                    setLoading(true)
-
-                    navigation.navigate('Opening')
-
-                    setLoading(false)
+                    sendEmail(email, okFunction)
                 }
-            }]
-        }).catch((err) => {
-            Alert.alert(err.message)
-        })
+            },
+            {
+                text: 'Cancelar', 
+                onPress: () => null
+            }
+        ])
     }
 
     if(loading){

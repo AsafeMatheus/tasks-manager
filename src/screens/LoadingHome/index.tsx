@@ -3,7 +3,6 @@ import {
     View
 } from "react-native"
 
-import { View as MotiView } from 'moti'
 import { Skeleton } from '@motify/skeleton'
 
 import { SimpleLineIcons } from "@expo/vector-icons"

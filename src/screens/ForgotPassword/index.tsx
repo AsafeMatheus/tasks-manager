@@ -8,6 +8,7 @@ import {
     Text
 } from "react-native"
 
+import { sendEmail } from "../../global/functions"
 import firebase from '../../config/firebaseconfig'
 
 import { Header } from "../../components/Header"
@@ -17,7 +18,7 @@ import { styles } from "./styles"
 export function ForgotPassword(){
     const [email, setEmail] = useState('')
 
-    const sendEmail = () => {
+    /*const sendEmail = () => {
         firebase.auth().sendPasswordResetEmail(email)
         .then(() => {
             Alert.alert('Email enviado', 'enviamos um email de redefinição de senha para o endereço: ' + email),
@@ -28,6 +29,10 @@ export function ForgotPassword(){
         }).catch((err) => {
             Alert.alert(err.message)
         })
+    }*/
+
+    const okFunction = () => {
+        return null
     }
 
     const sendEmailToChangePassword = () => {
@@ -39,7 +44,7 @@ export function ForgotPassword(){
             },
             {
                 text: 'Ok',
-                onPress: () => sendEmail()
+                onPress: () => sendEmail(email, okFunction)
             }
         ])
     }

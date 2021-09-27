@@ -10,11 +10,10 @@ import { Button } from "../../components/Button"
 import { styles } from "./styles"
 
 type Props = {
-    groupId: string,
-    groupCreator: string
+    groupId: string
 }
 
-export function GroupAgenda({ groupId, groupCreator } : Props){
+export function GroupAgenda({ groupId } : Props){
     const navigation = useNavigation()
 
     const [events, setEvents] : any = useState([])
@@ -32,8 +31,6 @@ export function GroupAgenda({ groupId, groupCreator } : Props){
                     id: agenda.id,
                     ...agenda.data()
                 })
-
-                console.log(agenda.data())
             })
 
             setEvents(agendasList)
@@ -64,8 +61,7 @@ export function GroupAgenda({ groupId, groupCreator } : Props){
                     title='Agendar'
                     onPress={() => {
                         navigation.navigate('CreateGroupAgenda', {
-                            groupId,
-                            groupCreator
+                            groupId
                         })
                     }}
                 />

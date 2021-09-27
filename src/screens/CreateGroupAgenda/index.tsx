@@ -25,7 +25,7 @@ import { Header } from "../../components/Header"
 import { styles } from "./styles"
 
 export function CreateGroupAgenda({route} : any){
-    const {groupId, groupCreator} = route.params
+    const { groupId } = route.params
 
     const navigation = useNavigation()
 
@@ -61,7 +61,6 @@ export function CreateGroupAgenda({route} : any){
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             year: currentTime.getFullYear(),
             groupAgenda: true,
-            groupCreator,
             remember,
             groupId,
             minute,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { SafeAreaView, FlatList, Alert } from "react-native"
+import { SafeAreaView, FlatList } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
 import firebase from '../../config/firebaseconfig'
@@ -17,27 +17,7 @@ export function Groups(){
     const userId = String(firebase.auth().currentUser?.uid)
 
     const [groups, setGroups] : any = useState([])
-    const [groupsIdsState, setGroupsIdsState] = useState([])
-
-    const getTheDataOfEachGroup = () => {
-        const listOfGroups : any = []
-
-        groupsIdsState.forEach((groupId) => {
-            firebase.firestore().collection('groups')
-            .doc(groupId)
-            .get()
-            .then((response) => {
-                listOfGroups.push({
-                    id: response.id,
-                    ...response.data()
-                })
-
-                setGroups(listOfGroups)
-            }).catch((err) => {
-                console.log(err)
-            })
-        })
-    }
+    //const [groupsIdsState, setGroupsIdsState] = useState([])
 
     useEffect(() => {
         firebase.firestore().collection(userId)
@@ -65,11 +45,8 @@ export function Groups(){
                     ]
 
                     setGroups(listOfGroups)
-                }).catch((err) => {
-                    console.log(err)
-                })
+                }).catch((err) => null)
             })
-            setGroupsIdsState(listOfGroupsIds)
         })
     }, [])
 
@@ -93,8 +70,7 @@ export function Groups(){
                             data={item}
                             onPress={() => {
                                 navigation.navigate('GroupNavigation', {
-                                    groupId: item.id,
-                                    creatorId: item.creator
+                                    groupId: item.id
                                 })
                             }}
                         />
