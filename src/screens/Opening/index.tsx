@@ -18,20 +18,21 @@ export function Opening({navigation} : any){
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const unsubscribe = firebase.auth().onAuthStateChanged((authUser) => {
+        const unsubscribe = firebase.auth().onAuthStateChanged(async (authUser) => {
             if (authUser) {
-                Linking.getInitialURL().then((ev) => {
+                await Linking.getInitialURL().then((ev) => {
                     if (ev){
                         let dataFromLinking = Linking.parse(ev)
                       
-                        if (dataFromLinking.queryParams.group == 'true'){
-                            navigation.replace('GroupInvite', {
-                                groupId: dataFromLinking.queryParams.groupId
-                            })
-                        }
+                        /*if (dataFromLinking.queryParams.group == 'true'){
+                        }*/
 
                         if (!dataFromLinking.queryParams.group){
                             navigation.navigate('MainNavigation')
+                        } else{
+                            navigation.replace('GroupInvite', {
+                                groupId: dataFromLinking.queryParams.groupId
+                            })
                         }
                     }
                   }).catch((err) => console.log('An error ocurred: ' + err))

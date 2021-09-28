@@ -47,7 +47,9 @@ export function Group({ data, ...rest } : Props){
             id: '2',
             title: 'Membros',
             function: () => {
-                navigation.navigate('GroupMembers')
+                navigation.navigate('GroupMembers', {
+                    groupId: data.id
+                })
                 setOptionsVisible(false)
             }
         },
