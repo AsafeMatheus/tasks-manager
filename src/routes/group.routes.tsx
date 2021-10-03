@@ -22,6 +22,7 @@ export function GroupNavigation({navigation, route} : any){
 
     const pixelRatio = PixelRatio.get()
 
+    const [linkToTheGroup, setLinkToTheGroup] = useState('')
     const [description, setDescription] = useState('')
     const [image, setImage] = useState('')
     const [name, setName] = useState('')
@@ -34,6 +35,7 @@ export function GroupNavigation({navigation, route} : any){
 
         if (isMounted){
             reference.get().then(doc => {   
+                setLinkToTheGroup(doc.data()?.linkToTheGroup)
                 setDescription(doc.data()?.description)
                 setImage(doc.data()?.image)
                 setName(doc.data()?.name)
@@ -66,6 +68,8 @@ export function GroupNavigation({navigation, route} : any){
                 name={name}
                 description={description}
                 image={image}
+                linkToTheGroup={linkToTheGroup}
+                groupId={groupId}
             />
             <Navigator
                 initialRouteName='GroupTasks'
@@ -75,7 +79,7 @@ export function GroupNavigation({navigation, route} : any){
                     },
                     activeTintColor: theme.colors.secondary10,
                     labelStyle:{
-                        fontSize: pixelRatio <= 2 ? adjust(11) : adjust(18)
+                        fontSize: pixelRatio <= 2 ? adjust(11) : adjust(16)
                     }
                 }}
             >

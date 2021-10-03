@@ -93,6 +93,7 @@ export function GroupMembers({ route } : any){
 
             <View style={styles.spacement}>
                 <FlatList
+                    style={styles.membersList}
                     data={members}
                     keyExtractor={item => item.id}
                     renderItem={({item}) => {

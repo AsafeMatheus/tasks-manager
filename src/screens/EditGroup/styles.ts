@@ -11,9 +11,6 @@ export const styles = StyleSheet.create({
         paddingTop: getStatusBarHeight() + adjust(26),
         backgroundColor: theme.colors.background
     },
-    ad:{
-        marginTop: 40
-    },
     footer:{
         width: '100%',
         position: 'absolute',

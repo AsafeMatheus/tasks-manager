@@ -27,9 +27,12 @@ export const styles = StyleSheet.create({
         color: '#DDE3F0',
         fontSize: adjust(15)
     },
-    back:{
+    header:{
         backgroundColor: 'rgba(52, 52, 52, 0.6)',
         paddingHorizontal: adjust(24),
-        paddingTop: getStatusBarHeight() 
+        paddingTop: getStatusBarHeight(),
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center' 
     }
 })

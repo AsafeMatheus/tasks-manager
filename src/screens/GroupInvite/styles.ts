@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingTop: getStatusBarHeight() + adjust(26),
+        paddingTop: getStatusBarHeight() + adjust(26)
     },
     ad:{
         marginBottom: adjust(40),
@@ -28,5 +28,8 @@ export const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    membersList:{
+        marginBottom: 195
     }
 })

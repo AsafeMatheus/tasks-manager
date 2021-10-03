@@ -36,7 +36,7 @@ export function Group({ data, ...rest } : Props){
     const [optionsVisible, setOptionsVisible] = useState(false)
     const [membersLength, setMembersLength] = useState(0)
 
-    const [options, setOptions] = useState([
+    const options = [
         {
             id: '1',
             title: 'Editar',
@@ -73,7 +73,7 @@ export function Group({ data, ...rest } : Props){
             title: 'Cancelar',
             function: () => setOptionsVisible(false)
         }
-    ])
+    ]
 
     useEffect(() => {
         firebase.firestore().collection('groups')
