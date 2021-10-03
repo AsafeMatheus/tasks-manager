@@ -27,18 +27,20 @@ export function GroupNavigation({navigation, route} : any){
     const [name, setName] = useState('')
     
     useEffect(() => {
-        const mainFunction = () => {
-            const reference = firebase.firestore().collection('groups')
-            .doc(groupId)
+        let isMounted = true
+        
+        const reference = firebase.firestore().collection('groups')
+        .doc(groupId)
 
+        if (isMounted){
             reference.get().then(doc => {   
                 setDescription(doc.data()?.description)
                 setImage(doc.data()?.image)
                 setName(doc.data()?.name)
             }).catch(() => null)
-        } 
+        }
 
-        return mainFunction()
+        return () => { isMounted = false }
     }, [])
 
     function GroupTasksComponent(){

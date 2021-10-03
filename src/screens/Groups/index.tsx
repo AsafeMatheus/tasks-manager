@@ -11,15 +11,14 @@ import { Group } from "../../components/Group"
 
 import { styles } from "./styles"
 
-export function Groups(){
+export function Groups({ route } : any){
     const navigation = useNavigation()
 
     const userId = String(firebase.auth().currentUser?.uid)
 
     const [groups, setGroups] : any = useState([])
-    //const [groupsIdsState, setGroupsIdsState] = useState([])
 
-    useEffect(() => {
+    function getGroups(){
         firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
@@ -48,6 +47,15 @@ export function Groups(){
                 }).catch((err) => null)
             })
         })
+    }
+
+    if (route.params?.justUpdate){
+        console.log('gutin')
+        getGroups()
+    }
+
+    useEffect(() => {
+        getGroups()
     }, [])
 
     return(

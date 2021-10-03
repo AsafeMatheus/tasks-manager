@@ -11,7 +11,9 @@ export const styles = StyleSheet.create({
         paddingTop: getStatusBarHeight() + adjust(26),
     },
     ad:{
-        marginBottom: adjust(40)
+        marginBottom: adjust(40),
+        width: '100%',
+        alignItems: 'center'
     },
     spacement:{
         marginHorizontal: adjust(24)

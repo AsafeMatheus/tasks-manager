@@ -4,7 +4,8 @@ import { theme } from "../../global/styles/theme"
 export const styles = StyleSheet.create({
     container:{
         flex: 1,
-        paddingTop: 20
+        paddingTop: 20,
+        backgroundColor: theme.colors.background
     },
     footer:{
         width: '100%',

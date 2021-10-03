@@ -34,8 +34,10 @@ export function Opening({navigation} : any){
                                 groupId: dataFromLinking.queryParams.groupId
                             })
                         }
+                    } else{
+                        navigation.navigate('MainNavigation')
                     }
-                  }).catch((err) => console.log('An error ocurred: ' + err))
+                }).catch((err) => console.log('An error ocurred: ' + err))
             } else{
                 setLoading(false)
             }

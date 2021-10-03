@@ -27,6 +27,9 @@ export function GroupTasks({ groupId } : Props){
     .doc(groupId)
 
     useEffect(() => {
+        let isMounted = true
+
+        if (isMounted){
         ref.collection('group-tasks')
         .orderBy('timestamp', 'desc')
         .onSnapshot((task) => {
@@ -63,7 +66,7 @@ export function GroupTasks({ groupId } : Props){
                     members: membersList
                 })
             })
-
+        
             setTasks(list)
         })
         
@@ -71,7 +74,9 @@ export function GroupTasks({ groupId } : Props){
         .doc('profile-image')
         .onSnapshot((doc) => {
             setUserImage(String(doc.data()?.avatar))
-        })
+        })}
+
+        return () => { isMounted = false }
     }, [])
 
     const participate = (index : string) => {

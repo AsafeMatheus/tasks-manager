@@ -1,31 +1,45 @@
 import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
+    ActivityIndicator,
     SafeAreaView,
+    Dimensions,
+    Keyboard,
     Platform,
-    Alert
+    View
 } from "react-native"
 
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
 import { useNavigation } from "@react-navigation/native"
 import * as ImagePicker from 'expo-image-picker'
+import firebase from '../../config/firebaseconfig'
 
 import { InputWithLabel } from "../../components/InputWithLabel"
+import { MarkOption } from "../../components/MarkOption"
 import { PickImage } from "../../components/PickImage"
 import { TextArea } from "../../components/TextArea"
 import { Header } from "../../components/Header"
 import { Button } from "../../components/Button"
 
+import { theme } from "../../global/styles/theme"
+import { adjust } from "../../global/functions"
 import { styles } from "./styles"
 
 setTestDeviceIDAsync('EMULATOR')
 
-export function EditGroup(){
+export function EditGroup({ route } : any){
     const navigation = useNavigation()
 
-    const [image, setImage] = useState('https://certificadocursosonline.com/wp-content/uploads/2017/09/curso-de-ingles-online-gratis-1280x720.jpg')
-    const [description, setDescription] = useState('Eventos e trabalhos da turma número 8 do CCAA')
-    const [name, setName] = useState('Turma de inglês')
+    const { groupId } = route.params
+    const [everybodyCanPost, setEverybodyCanPost] = useState(true)
+    const [linkToTheGroup, setLinkToTheGroup] = useState('')
+    const [description, setDescription] = useState('')
+    const [image, setImage] = useState('')
+    const [name, setName] = useState('')
+
+    const [loading, setLoading] = useState(false)
+    const [showButton, setShowButton] = useState(true)
+    const deviceHeight = Dimensions.get('window').height
 
     useEffect(() => {
         (async () => {
@@ -36,6 +50,29 @@ export function EditGroup(){
             }
           }
         })()
+
+        setLoading(false)
+
+        firebase.firestore().collection('groups')
+        .doc(groupId)
+        .get()
+        .then((response) => {
+            let responseData = response.data()
+
+            setEverybodyCanPost(responseData?.everybodyCanPost)
+            setLinkToTheGroup(responseData?.linkToTheGroup)
+            setDescription(responseData?.description)
+            setImage(responseData?.image)
+            setName(responseData?.name)
+        }).catch(() => null)
+
+        Keyboard.addListener('keyboardDidShow', () => {
+            setShowButton(false)
+        })
+
+        Keyboard.addListener('keyboardDidHide', () => {
+            setShowButton(true)
+        })
     }, [])
 
     const pickImage = async () => {
@@ -43,24 +80,41 @@ export function EditGroup(){
           mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [4, 3],
-          quality: 1,
+          quality: 0.6,
+          base64: true
         })
     
         if (!result.cancelled) {
-          setImage(result.uri)
+          setImage(String(result.base64))
         }
     }
 
-    const verification = () => {
-        let nameLength = name.length
-        let descriptionLength = description.length
+    const updateGroup = () => {
+        setLoading(true)
 
-        if (nameLength == 0 || descriptionLength == 0){
-            Alert.alert('Por favor, preencha todos os campos assima')
-        } else{
-            navigation.navigate('Grupos')
-        }
+        firebase.firestore().collection('groups')
+        .doc(groupId)
+        .set({
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            everybodyCanPost,
+            linkToTheGroup,
+            description,
+            image,
+            name
+        })
+
+        setTimeout(() => {
+            navigation.navigate('Grupos', { justUpdate: true })
+        }, 3000)
     }
+
+    if(loading){
+        return(
+            <View style={styles.loading}>
+                <ActivityIndicator size={50} color={theme.colors.highlight} />
+            </View>
+        )
+    }else{
 
     return(
         <SafeAreaView style={styles.container}>
@@ -84,23 +138,55 @@ export function EditGroup(){
                 />
             </KeyboardAvoidingView>
 
-            <PickImage 
-                imageUrl={image}
-                onPress={() => pickImage()}
-            />
+            <View
+                style={{
+                    marginTop: deviceHeight >= 590 ?
+                    0 : 15
+                }}
+            >
+                <PickImage
+                    imageUrl={`data:image/jpeg;base64,${image}`}
+                    onPress={() => pickImage()}
+                />
+            </View>
 
-            <AdMobBanner
-                bannerSize="largeBanner"
-                adUnitID="ca-app-pub-3940256099942544/6300978111" 
-                servePersonalizedAds 
-                onDidFailToReceiveAdWithError={(err) => console.log(err)}
-                style={styles.ad}
-            />
+            <View style={styles.mark}>
+                <MarkOption
+                    title={'Todos podem postar'}
+                    set={() => setEverybodyCanPost(!everybodyCanPost)}
+                    marked={everybodyCanPost}
+                    size={adjust(18)}
+                    line={false}
+                />
+            </View>
 
-            <Button
-                title='Confirmar'
-                onPress={verification}
-            />
+            {
+                deviceHeight > 600 ?
+                <AdMobBanner
+                    bannerSize="largeBanner"
+                    adUnitID="ca-app-pub-3940256099942544/6300978111" 
+                    servePersonalizedAds 
+                    onDidFailToReceiveAdWithError={(err) => console.log(err)}
+                    style={styles.ad}
+                />
+                :
+                <View />
+            }
+
+            {
+                showButton ?
+                <View style={styles.footer}>
+                    <Button
+                        title='Confirmar'
+                        onPress={updateGroup}
+                    />
+                </View>
+                :
+                <View />
+            }
+
+            
         </SafeAreaView>
     )
+    }
 }

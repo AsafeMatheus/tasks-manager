@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { 
     View, 
     Text, 
@@ -9,6 +9,7 @@ import {
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { OptionsModal } from "../OptionsModal"
 
@@ -33,13 +34,14 @@ export function Group({ data, ...rest } : Props){
     const navigation = useNavigation()
 
     const [optionsVisible, setOptionsVisible] = useState(false)
+    const [membersLength, setMembersLength] = useState(0)
 
     const [options, setOptions] = useState([
         {
             id: '1',
             title: 'Editar',
             function: () => {
-                navigation.navigate('EditGroup')
+                navigation.navigate('EditGroup', { groupId: data.id })
                 setOptionsVisible(false)
             }
         },
@@ -73,6 +75,21 @@ export function Group({ data, ...rest } : Props){
         }
     ])
 
+    useEffect(() => {
+        firebase.firestore().collection('groups')
+        .doc(data.id)
+        .collection('members')
+        .onSnapshot((members) => {
+            const listOfMembers = []
+
+            members.forEach((member) => {
+                listOfMembers.push(member.id)
+            })
+
+            setMembersLength(listOfMembers.length)
+        })
+    }, [])
+
     return(
         <View style={styles.container}>
             <TouchableOpacity activeOpacity={0.7} {...rest}>
@@ -92,7 +109,7 @@ export function Group({ data, ...rest } : Props){
                     
                     <View style={styles.information}>
                         <Text style={styles.title}>{ data.name }</Text>
-                        <Text style={styles.members}>membros: {data.amountOfPeople}</Text>
+                        <Text style={styles.members}>membros: {membersLength}</Text>
                     </View>
                 </View>
             </TouchableOpacity>

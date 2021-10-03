@@ -99,7 +99,6 @@ export function CreateGroup(){
                 .doc(randomId)
                 .set({
                     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    creator: firebase.auth().currentUser?.uid,
                     everybodyCanPost,
                     linkToTheGroup,
                     description,
@@ -111,8 +110,11 @@ export function CreateGroup(){
                 firebase.firestore().collection('groups')
                 .doc(randomId)
                 .collection('members')
-                .add({
-                    userId: String(firebase.auth().currentUser?.uid)
+                .doc(String(firebase.auth().currentUser?.uid))
+                .set({
+                    userId: String(firebase.auth().currentUser?.uid),
+                    admin: true,
+                    creator: true
                 })
 
                 keepCreating = false

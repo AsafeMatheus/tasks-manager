@@ -8,10 +8,14 @@ export const styles = StyleSheet.create({
     container:{
         flex: 1,
         backgroundColor: theme.colors.background,
-        paddingTop: getStatusBarHeight() + adjust(26),
-        paddingHorizontal: adjust(24)
+        paddingTop: getStatusBarHeight() + adjust(26)
     },
     ad:{
-        marginBottom: 40
+        marginBottom: 40,
+        width: '100%',
+        alignItems: 'center'
+    },
+    spacement:{
+        marginHorizontal: adjust(24)
     }
 })

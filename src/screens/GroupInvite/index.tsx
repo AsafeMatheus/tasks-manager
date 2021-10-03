@@ -22,9 +22,9 @@ setTestDeviceIDAsync('EMULATOR')
 export function GroupInvite({ navigation, route } : any){
     const groupId = route.params.groupId
 
+    const [alreadyAMember, setAlreadyAMember] = useState(false)
     const [groupName, setGroupName] = useState('')
     const [loading, setLoading] = useState(false)
-    const [alreadyAMember, setAlreadyAMember] = useState(false)
 
     const [members, setMembers] : any = useState([])
 
@@ -62,7 +62,8 @@ export function GroupInvite({ navigation, route } : any){
                         listOfMembers.push({
                             id: memberId.data()?.userId,
                             username: responseUsername.data()?.username,
-                            image: responseImage.data()?.avatar   
+                            image: responseImage.data()?.avatar,
+                            admin: memberId.data()?.admin 
                         })
 
                         setMembers(listOfMembers)
@@ -110,8 +111,11 @@ export function GroupInvite({ navigation, route } : any){
             firebase.firestore().collection('groups')
             .doc(groupId)
             .collection('members')
-            .add({
-                userId: String(firebase.auth().currentUser?.uid)
+            .doc(String(firebase.auth().currentUser?.uid))
+            .set({
+                userId: String(firebase.auth().currentUser?.uid),
+                admin: false,
+                creator: false
             })
 
             setTimeout(() => {
@@ -136,6 +140,9 @@ export function GroupInvite({ navigation, route } : any){
                 <View style={styles.spacement}>
                     <Header
                         title={groupName}
+                        goBackFunction={() => {
+                            navigation.navigate('MainNavigation')
+                        }}
                     />
                 </View>
 
@@ -155,6 +162,7 @@ export function GroupInvite({ navigation, route } : any){
                             return(
                                 <Member
                                     data={item}
+                                    optionsButton={false}
                                 />
                             )
                         }}

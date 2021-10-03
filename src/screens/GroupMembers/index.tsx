@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { 
     SafeAreaView,
-    FlatList
+    FlatList,
+    View
 } from "react-native"
 
 import { AdMobBanner, setTestDeviceIDAsync } from 'expo-ads-admob'
@@ -19,6 +20,7 @@ export function GroupMembers({ route } : any){
 
     const [groupName, setGroupName] = useState('')
     const [members, setMembers] : any = useState([])
+    const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
         firebase.firestore().collection('groups')
@@ -26,7 +28,7 @@ export function GroupMembers({ route } : any){
         .get()
         .then((response) => {
             setGroupName(response.data()?.name)
-        }).catch((err) => null)
+        }).catch(() => null)
 
         firebase.firestore().collection('groups')
         .doc(String(groupId))
@@ -48,7 +50,9 @@ export function GroupMembers({ route } : any){
                         listOfMembers.push({
                             id: memberId.data()?.userId,
                             username: responseUsername.data()?.username,
-                            image: responseImage.data()?.avatar   
+                            image: responseImage.data()?.avatar,
+                            admin: memberId.data()?.admin,
+                            creator: memberId.data()?.creator
                         })
 
                         setMembers(listOfMembers)
@@ -56,13 +60,28 @@ export function GroupMembers({ route } : any){
                 })
             })
         })
+
+        firebase.firestore().collection('groups')
+        .doc(groupId)
+        .collection('members')
+        .doc(String(firebase.auth().currentUser?.uid))
+        .get()
+        .then((response) => {
+            const isAdmin = response.data()?.admin
+
+            if (isAdmin){
+                setIsAdmin(true)
+            }
+        }).catch(err => console.log(err))
     }, [])
 
     return(
         <SafeAreaView style={styles.container}>
-            <Header
-                title={groupName}
-            />
+            <View style={styles.spacement}>
+                <Header
+                    title={groupName}
+                />
+            </View>
 
             <AdMobBanner
                 bannerSize="banner"
@@ -72,18 +91,22 @@ export function GroupMembers({ route } : any){
                 style={styles.ad}
             />
 
-            <FlatList 
-                data={members}
-                keyExtractor={item => item.id}
-                renderItem={({item}) => {
-                    return(
-                        <Member 
-                            data={item} 
-                        />
-                    )
-                }}
-                showsVerticalScrollIndicator={false}
-            />
+            <View style={styles.spacement}>
+                <FlatList
+                    data={members}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => {
+                        return(
+                            <Member
+                                data={item}
+                                isAdmin={isAdmin}
+                                groupId={groupId}
+                            />
+                        )
+                    }}
+                    showsVerticalScrollIndicator={false}
+                />
+            </View>
         </SafeAreaView>
     )
 }

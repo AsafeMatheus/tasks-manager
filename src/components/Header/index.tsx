@@ -10,16 +10,23 @@ import { styles } from "./styles"
 type Props = {
     title: string,
     action?: ReactNode,
-    goBack?: boolean
+    goBack?: boolean,
+    goBackFunction?: () => void
 }
 
-export function Header({ title, action, goBack } : Props){
+export function Header({ title, action, goBack, goBackFunction } : Props){
     const navigation = useNavigation()
 
     return(
         <View style={styles.container}>
             <TouchableOpacity 
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                    if(goBackFunction){
+                        goBackFunction()
+                    } else{
+                       navigation.goBack() 
+                    }
+                }}
                 disabled={goBack}
             >
                 <Ionicons name="chevron-back" size={24} color="black" />

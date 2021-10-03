@@ -12,8 +12,9 @@ export const styles = StyleSheet.create({
     },
     footer:{
         width: '100%',
-        backgroundColor: theme.colors.background,
-        //marginTop: 45
+        position: 'absolute',
+        bottom: 20,
+        paddingHorizontal: adjust(24)
     },
     spacement:{
         paddingHorizontal: adjust(24)

@@ -5,7 +5,8 @@ export const styles = StyleSheet.create({
     container:{
         flex: 1,
         paddingHorizontal: 24,
-        paddingTop: 20
+        paddingTop: 20,
+        backgroundColor: theme.colors.background
     },
     footer:{
         width: '100%',

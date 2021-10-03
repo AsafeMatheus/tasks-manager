@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { 
     KeyboardAvoidingView,
     SafeAreaView,
     Dimensions,
     StatusBar,
+    Keyboard,
     Platform,
     View
 } from "react-native"
@@ -24,10 +25,21 @@ export function CreateGroupTask({ navigation, route } : any){
     const { groupId } = route.params
 
     const deviceHeight = Dimensions.get('window').height
+    const [showButton, setShowButton] = useState(true)
 
     const [amountOfPeople, setAmountOfPeople] = useState(0)
     const [title, setTitle] = useState('')
     const [date, setDate] = useState('')
+
+    useEffect(() => {
+        Keyboard.addListener('keyboardDidShow', () => {
+            setShowButton(false)
+        })
+
+        Keyboard.addListener('keyboardDidHide', () => {
+            setShowButton(true)
+        })
+    }, [])
 
     const addTask = () => {
         const ref = firebase.firestore().collection('groups')
@@ -82,18 +94,24 @@ export function CreateGroupTask({ navigation, route } : any){
                 servePersonalizedAds 
                 onDidFailToReceiveAdWithError={(err) => null}
                 style={{
-                    marginTop: deviceHeight > 600 ? adjust(35) : adjust(15)
+                    marginTop: deviceHeight > 600 ? adjust(35) : adjust(15),
+                    alignItems: 'center',
+                    width: '100%'
                 }}
             />
 
-            <View style={styles.spacement}>
+            {
+                showButton ?
                 <View style={styles.footer}>
                     <Button
                         title='Confirmar'
                         onPress={ addTask }
                     />
                 </View>
-            </View>
+                :
+                <View />
+            }
+            
         </SafeAreaView>
     )
 }

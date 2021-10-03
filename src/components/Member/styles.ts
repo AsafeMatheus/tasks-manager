@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native"
+import { adjust } from "../../global/functions"
+import { theme } from "../../global/styles/theme"
 
 export const styles = StyleSheet.create({
     container:{
@@ -17,7 +19,21 @@ export const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25
     },
-    title:{
+    informations:{
         marginLeft: 10
+    },
+    adminText:{
+        fontSize: 10,
+        color: theme.colors.activeable
+    },
+    adminBox:{
+        borderColor: theme.colors.activeable,
+        borderWidth: 0.5,
+        alignItems: 'center',
+        width: 65,
+        justifyContent: 'center'
+    },
+    title:{
+        fontSize: adjust(18)
     }
 })
