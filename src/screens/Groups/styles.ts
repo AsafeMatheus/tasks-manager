@@ -10,5 +10,10 @@ export const styles = StyleSheet.create({
         paddingHorizontal: adjust(24),
         paddingTop: getStatusBarHeight() + adjust(26),
         backgroundColor: theme.colors.background
+    },
+    loading:{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })

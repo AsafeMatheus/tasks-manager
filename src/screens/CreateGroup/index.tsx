@@ -123,7 +123,7 @@ export function CreateGroup(){
         }
 
         // Adding the created group to the creator groups list
-        await reference.add({
+        await reference.doc(groupId).set({
             groupId
         })
 

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react"
 import { 
+    TouchableOpacityProps,
+    TouchableOpacity, 
+    Clipboard,
+    Alert,
+    Image,
     View, 
     Text, 
-    Image,
-    Clipboard,
-    TouchableOpacity, 
-    TouchableOpacityProps
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
@@ -27,14 +28,65 @@ export type GroupProps = {
 }
 
 type Props = TouchableOpacityProps & {
-    data: GroupProps
+    data: GroupProps,
+    setLoad: any,
+    load: boolean
 }
 
-export function Group({ data, ...rest } : Props){
+export function Group({
+    setLoad,
+    load,
+    data, 
+    ...rest 
+    } : Props){
     const navigation = useNavigation()
+
+    const userId = String(firebase.auth().currentUser?.uid)
 
     const [optionsVisible, setOptionsVisible] = useState(false)
     const [membersLength, setMembersLength] = useState(0)
+
+    const exitGroup = () => {
+        const myGroupsReference = firebase.firestore().collection(userId)
+        .doc('groups')
+        .collection('my-groups')
+
+        const groupReference = firebase.firestore().collection('groups')
+        .doc(data.id)
+
+        myGroupsReference
+        .doc(data.id)
+        .delete()
+
+        groupReference.collection('members').get().then(snap => {
+            const groupMembersLength = snap.size
+
+            groupReference
+            .collection('members')
+            .doc(userId)
+            .delete()
+
+            if (groupMembersLength == 1){
+                groupReference.delete()
+            }
+        })
+
+        setOptionsVisible(false)
+        setLoad(!load)
+    }
+
+    const askIfTheUserReallyWantsToExit = () => {
+        Alert.alert(`Sair`, `Você realmente deseja sair de ${data.name}`, [
+            {
+                text: 'Sim',
+                onPress: () => exitGroup()
+            },
+            {
+                text: 'Não',
+                onPress: () => setOptionsVisible(false)
+            }
+        ])
+    }
 
     const options = [
         {
@@ -66,7 +118,7 @@ export function Group({ data, ...rest } : Props){
         {
             id: '4',
             title: 'Sair',
-            function: () => setOptionsVisible(false)
+            function: () => askIfTheUserReallyWantsToExit()
         },
         {
             id: '5',

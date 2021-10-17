@@ -30,6 +30,6 @@ export const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     membersList:{
-        marginBottom: 195
+        marginBottom: adjust(225)
     }
 })

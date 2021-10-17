@@ -104,7 +104,8 @@ export function GroupInvite({ navigation, route } : any){
             setLoading(true)
 
             myGroupsReference
-            .add({
+            .doc(groupId)
+            .set({
                 groupId
             })
 

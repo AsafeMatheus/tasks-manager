@@ -17,25 +17,26 @@ import { styles } from "./styles"
 export function Opening({navigation} : any){
     const [loading, setLoading] = useState(true)
 
+    const handleMainNavigation = () => {
+        navigation.navigate('MainNavigation')
+    }
+
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged(async (authUser) => {
             if (authUser) {
                 await Linking.getInitialURL().then((ev) => {
                     if (ev){
                         let dataFromLinking = Linking.parse(ev)
-                      
-                        /*if (dataFromLinking.queryParams.group == 'true'){
-                        }*/
 
                         if (!dataFromLinking.queryParams.group){
-                            navigation.navigate('MainNavigation')
+                            handleMainNavigation()
                         } else{
                             navigation.replace('GroupInvite', {
                                 groupId: dataFromLinking.queryParams.groupId
                             })
                         }
                     } else{
-                        navigation.navigate('MainNavigation')
+                        handleMainNavigation()
                     }
                 }).catch((err) => console.log('An error ocurred: ' + err))
             } else{
@@ -68,7 +69,7 @@ export function Opening({navigation} : any){
             <Button
                 title='Entrar'
                 onPress={() => {
-                    navigation.navigate('SignIn', {justLogOut: false})
+                    navigation.navigate('SignIn', { justLogOut: false })
                 }}
             />
 

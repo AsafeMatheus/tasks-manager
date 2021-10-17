@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react"
-import { SafeAreaView, FlatList } from "react-native"
+import { 
+    ActivityIndicator,
+    SafeAreaView, 
+    FlatList,
+    View 
+} from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
 import firebase from '../../config/firebaseconfig'
@@ -9,6 +14,7 @@ import { Divider } from "../../components/Divider"
 import { Header } from "../../components/Header"
 import { Group } from "../../components/Group"
 
+import { theme } from '../../global/styles/theme'
 import { styles } from "./styles"
 
 export function Groups({ route } : any){
@@ -16,9 +22,13 @@ export function Groups({ route } : any){
 
     const userId = String(firebase.auth().currentUser?.uid)
 
+    const [load, setLoad] = useState(false)
+
     const [groups, setGroups] : any = useState([])
 
     function getGroups(){
+        setGroups([])
+
         firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
@@ -44,19 +54,22 @@ export function Groups({ route } : any){
                     ]
 
                     setGroups(listOfGroups)
-                }).catch((err) => null)
+                }).catch(() => null)
             })
         })
     }
 
     if (route.params?.justUpdate){
-        console.log('gutin')
         getGroups()
     }
 
     useEffect(() => {
         getGroups()
     }, [])
+
+    useEffect(() => {
+        getGroups()
+    }, [load])
 
     return(
         <SafeAreaView style={styles.container}>
@@ -76,6 +89,8 @@ export function Groups({ route } : any){
                     return(
                         <Group
                             data={item}
+                            setLoad={setLoad}
+                            load={load}
                             onPress={() => {
                                 navigation.navigate('GroupNavigation', {
                                     groupId: item.id
