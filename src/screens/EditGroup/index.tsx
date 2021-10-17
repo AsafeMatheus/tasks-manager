@@ -30,7 +30,12 @@ setTestDeviceIDAsync('EMULATOR')
 export function EditGroup({ route } : any){
     const navigation = useNavigation()
 
-    const { groupId } = route.params
+    const { 
+        groupId, 
+        load, 
+        setLoad 
+    } = route.params
+
     const [everybodyCanPost, setEverybodyCanPost] = useState(true)
     const [linkToTheGroup, setLinkToTheGroup] = useState('')
     const [description, setDescription] = useState('')
@@ -104,7 +109,8 @@ export function EditGroup({ route } : any){
         })
 
         setTimeout(() => {
-            navigation.navigate('Grupos', { justUpdate: true })
+            setLoad(!load)
+            navigation.navigate('Grupos')
         }, 3000)
     }
 

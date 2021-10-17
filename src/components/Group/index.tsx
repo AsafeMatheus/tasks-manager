@@ -24,7 +24,8 @@ export type GroupProps = {
     name: string,
     amountOfPeople?: number,
     image: string,
-    linkToTheGroup: string
+    linkToTheGroup: string,
+    removed ?: boolean
 }
 
 type Props = TouchableOpacityProps & {
@@ -46,11 +47,11 @@ export function Group({
     const [optionsVisible, setOptionsVisible] = useState(false)
     const [membersLength, setMembersLength] = useState(0)
 
-    const exitGroup = () => {
-        const myGroupsReference = firebase.firestore().collection(userId)
-        .doc('groups')
-        .collection('my-groups')
+    const myGroupsReference = firebase.firestore().collection(userId)
+    .doc('groups')
+    .collection('my-groups')
 
+    const exitGroup = () => {
         const groupReference = firebase.firestore().collection('groups')
         .doc(data.id)
 
@@ -75,15 +76,15 @@ export function Group({
         setLoad(!load)
     }
 
-    const askIfTheUserReallyWantsToExit = () => {
+    const askIfTheUserWantsToExit = () => {
         Alert.alert(`Sair`, `Você realmente deseja sair de ${data.name}`, [
-            {
-                text: 'Sim',
-                onPress: () => exitGroup()
-            },
             {
                 text: 'Não',
                 onPress: () => setOptionsVisible(false)
+            },
+            {
+                text: 'Sim',
+                onPress: () => exitGroup()
             }
         ])
     }
@@ -93,7 +94,11 @@ export function Group({
             id: '1',
             title: 'Editar',
             function: () => {
-                navigation.navigate('EditGroup', { groupId: data.id })
+                navigation.navigate('EditGroup', { 
+                    groupId: data.id,
+                    load,
+                    setLoad
+                })
                 setOptionsVisible(false)
             }
         },
@@ -118,7 +123,7 @@ export function Group({
         {
             id: '4',
             title: 'Sair',
-            function: () => askIfTheUserReallyWantsToExit()
+            function: () => askIfTheUserWantsToExit()
         },
         {
             id: '5',
@@ -126,6 +131,17 @@ export function Group({
             function: () => setOptionsVisible(false)
         }
     ]
+
+    const removedUserOptions = [{
+        id: '1',
+        title: 'excluir grupo',
+        function: () => {
+            myGroupsReference.doc(data.id).delete()
+
+            setLoad(!load)
+            setOptionsVisible(false)
+        }
+    }]
 
     useEffect(() => {
         firebase.firestore().collection('groups')
@@ -144,7 +160,10 @@ export function Group({
 
     return(
         <View style={styles.container}>
-            <TouchableOpacity activeOpacity={0.7} {...rest}>
+            <TouchableOpacity
+                activeOpacity={0.7} 
+                {...rest}
+            >
                 <View style={styles.leftContent}>
                     {
                         data.image == '' ?
@@ -175,7 +194,7 @@ export function Group({
                 closeModal={() => {
                     setOptionsVisible(false)
                 }}
-                data={options}
+                data={!data.removed ? options : removedUserOptions}
             />
         </View>
     )

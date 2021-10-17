@@ -18,7 +18,11 @@ import { adjust } from '../global/functions'
 const { Navigator, Screen } = createMaterialTopTabNavigator()
 
 export function GroupNavigation({navigation, route} : any){
-    const { groupId } = route.params
+    const { 
+        groupId,
+        load,
+        setLoad
+    } = route.params
 
     const pixelRatio = PixelRatio.get()
 
@@ -70,6 +74,8 @@ export function GroupNavigation({navigation, route} : any){
                 image={image}
                 linkToTheGroup={linkToTheGroup}
                 groupId={groupId}
+                load={load}
+                setLoad={setLoad}
             />
             <Navigator
                 initialRouteName='GroupTasks'

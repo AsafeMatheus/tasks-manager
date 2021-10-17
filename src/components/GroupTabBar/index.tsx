@@ -3,11 +3,13 @@ import {
     TouchableOpacity,
     ImageBackground,
     Clipboard,
+    Alert,
     View, 
     Text
 } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
+import firebase from '../../config/firebaseconfig'
 
 import { OptionsModal } from "../OptionsModal"
 
@@ -22,7 +24,9 @@ type Props = {
     description: string,
     image: string,
     groupId: string, 
-    linkToTheGroup: string
+    linkToTheGroup: string,
+    load: boolean,
+    setLoad: any
 }
 
 export function GroupTabBar({
@@ -30,18 +34,68 @@ export function GroupTabBar({
     description, 
     image,
     groupId,
-    linkToTheGroup
+    linkToTheGroup,
+    load,
+    setLoad
     } : Props){
     const navigation = useNavigation()
 
     const [optionsVisible, setOptionsVisible] = useState(false)
+
+    const userId = String(firebase.auth().currentUser?.uid)
+    const myGroupsReference = firebase.firestore().collection(userId)
+    .doc('groups')
+    .collection('my-groups')
+
+    const exitGroup = () => {
+        const groupReference = firebase.firestore().collection('groups')
+        .doc(groupId)
+
+        myGroupsReference
+        .doc(groupId)
+        .delete()
+
+        groupReference.collection('members').get().then(snap => {
+            const groupMembersLength = snap.size
+
+            groupReference
+            .collection('members')
+            .doc(userId)
+            .delete()
+
+            if (groupMembersLength == 1){
+                groupReference.delete()
+            }
+        })
+
+        setOptionsVisible(false)
+        setLoad(!load)
+        navigation.navigate('Grupos')
+    }
+
+    const askIfTheUserWantsToExit = () => {
+        Alert.alert(`Sair`, `Você realmente deseja sair de ${name}`, [
+            {
+                text: 'Não',
+                onPress: () => setOptionsVisible(false)
+            },
+            {
+                text: 'Sim',
+                onPress: () => exitGroup()
+            }
+        ])
+    }
 
     const options = [
         {
             id: '1',
             title: 'Editar',
             function: () => {
-                navigation.navigate('EditGroup', { groupId })
+                navigation.navigate('EditGroup', { 
+                    groupId,
+                    load,
+                    setLoad
+                })
                 setOptionsVisible(false)
             }
         },
@@ -66,7 +120,7 @@ export function GroupTabBar({
         {
             id: '4',
             title: 'Sair',
-            function: () => setOptionsVisible(false)
+            function: () => askIfTheUserWantsToExit()
         },
         {
             id: '5',

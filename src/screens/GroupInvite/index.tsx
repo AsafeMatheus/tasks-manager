@@ -20,6 +20,7 @@ import { styles } from "./styles"
 setTestDeviceIDAsync('EMULATOR')
 
 export function GroupInvite({ navigation, route } : any){
+    const currentUserId = firebase.auth().currentUser?.uid
     const groupId = route.params.groupId
 
     const [alreadyAMember, setAlreadyAMember] = useState(false)
@@ -51,6 +52,10 @@ export function GroupInvite({ navigation, route } : any){
             membersOnGroup.forEach((memberId) => {
                 const reference = firebase.firestore().collection(memberId.data()?.userId)
 
+                if (memberId.data()?.userId == currentUserId){
+                    setAlreadyAMember(true)
+                }
+
                 reference
                 .doc('profile-image')
                 .get()
@@ -70,17 +75,6 @@ export function GroupInvite({ navigation, route } : any){
                     })
                 })
             })
-
-            myGroupsReference.onSnapshot((myGroups) => {
-                myGroups.forEach((myGroup) => {
-                    let myGroupId = myGroup.data().groupId
-
-                    if (groupId == myGroupId){
-                        setAlreadyAMember(true)
-                    }
-                })
-            })
-
         })
     }, [])
 

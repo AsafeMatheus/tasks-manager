@@ -41,36 +41,65 @@ export function Member({
     const [isCurrentUser, setIsCurrentUser] = useState(false)
     const [optionsModal, setOptionsModal] = useState(false)
 
-    const makeOrDismissUserAdmin = (admin : any) => {
-        firebase.firestore().collection('groups')
-        .doc(groupId)
-        .collection('members')
-        .doc(data.id)
-        .set({
-            userId: data.id,
-            admin: admin
-        })
+    const memberReference = firebase.firestore().collection('groups')
+    .doc(groupId)
+    .collection('members')
+    .doc(data.id)
+
+    const makeOrDismissUserAdmin = () => {
+        if (data.creator){
+            Alert.alert(
+                'Ação não permitida', 
+                `${data.username} não pode ser removido da lista de admin, pois o usuario é o criador do grupo`
+            )
+        } else{
+            memberReference
+            .set({
+                userId: data.id,
+                admin: !data.admin
+            })
+        }
+    }
+
+    const removeUser = () => {
+        Alert.alert('Remover membro', `Deseja mesmo remover ${data.username} do grupo?`, [
+            {
+                text: 'Não',
+                onPress: () => null
+            },
+            {
+                text: 'Sim',
+                onPress: () => {
+                    firebase.firestore().collection(data.id)
+                    .doc('groups')
+                    .collection('my-groups')
+                    .doc(groupId)
+                    .set({
+                        groupId,
+                        removed: true
+                    })
+
+                    memberReference.delete()
+                }
+            }
+        ])
     }
 
     const adminOptions = [
         {
             id: '1',
-            title: 'Tirar membro',
-            function: () => setOptionsModal(false)
+            title: 'Remover membro',
+            function: () => {
+                removeUser()
+
+                setOptionsModal(false)
+            }
         },
         {
             id: '2',
             title: data.admin ? 'Remover de admin'  : 'Tornar admin',
             function: () => { 
-                if (data.creator){
-                    Alert.alert(
-                        'Ação não permitida', 
-                        `${data.username} não pode ser removido da lista de admin, pois o usuario é o criador do grupo`
-                    )
-                } else{
-                    makeOrDismissUserAdmin(!data.admin)
-                }
-
+                makeOrDismissUserAdmin()
                 setOptionsModal(false)
             }
         },

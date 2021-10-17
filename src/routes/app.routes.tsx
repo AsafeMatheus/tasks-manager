@@ -19,6 +19,7 @@ import { CreateGroup } from "../screens/CreateGroup"
 import { EditAgenda } from "../screens/EditAgenda"
 import { EditGroup } from "../screens/EditGroup"
 import { Opening } from "../screens/Opening"
+import { Removed } from "../screens/Removed"
 import { SignUp } from "../screens/SignUp"
 import { SignIn } from "../screens/SignIn"
 
@@ -103,6 +104,10 @@ export function AuthRoutes(){
             <Screen
                 name='GroupInvite'
                 component={ GroupInvite }
+            />
+            <Screen
+                name='Removed'
+                component={ Removed }
             />
         </Navigator>
         </>

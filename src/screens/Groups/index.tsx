@@ -32,24 +32,30 @@ export function Groups({ route } : any){
         firebase.firestore().collection(userId)
         .doc('groups')
         .collection('my-groups')
-        .onSnapshot((myGroupsIds) => {
-            const listOfGroupsIds : any = []
+        .onSnapshot((myGroupsInformation) => {
+            const listOfGroupsInformations : any = []
             let listOfGroups : any = []
 
-            myGroupsIds.forEach((oneGroupId) => {
-                listOfGroupsIds.push(oneGroupId.data().groupId)
+            myGroupsInformation.forEach((oneGroupInformation) => {
+                const groupInformationData = oneGroupInformation.data()
+
+                listOfGroupsInformations.push({
+                    groupId: groupInformationData.groupId,
+                    removed: groupInformationData?.removed ? true : false
+                })
             })
 
-            listOfGroupsIds.forEach((groupId : any) => {
+            listOfGroupsInformations.forEach((groupInformation : any) => {
                 firebase.firestore().collection('groups')
-                .doc(groupId)
+                .doc(groupInformation.groupId)
                 .get()
                 .then((response) => {
                     listOfGroups = [
                         ...listOfGroups, 
                         {
                             id: response.id,
-                        ...response.data()
+                            removed: groupInformation.removed,
+                            ...response.data()
                         }
                     ]
 
@@ -59,11 +65,12 @@ export function Groups({ route } : any){
         })
     }
 
-    if (route.params?.justUpdate){
-        getGroups()
-    }
-
     useEffect(() => {
+        /*if (route.params?.justUpdate){
+            getGroups()
+        }*/
+
+        console.log('1) useEffect is working.')
         getGroups()
     }, [])
 
@@ -92,9 +99,14 @@ export function Groups({ route } : any){
                             setLoad={setLoad}
                             load={load}
                             onPress={() => {
-                                navigation.navigate('GroupNavigation', {
-                                    groupId: item.id
-                                })
+                                navigation.navigate(item?.removed ? 
+                                    'Removed' : 'GroupNavigation', 
+                                    {
+                                        groupId: item.id,
+                                        load,
+                                        setLoad
+                                    }
+                                )
                             }}
                         />
                     )
