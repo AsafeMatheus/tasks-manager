@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { 
     TouchableOpacityProps,
     TouchableOpacity, 
+    ToastAndroid,
     Clipboard,
     Alert,
     Image,
@@ -118,6 +119,11 @@ export function Group({
             function: () => {
                 Clipboard.setString(data.linkToTheGroup)
                 setOptionsVisible(false)
+                ToastAndroid.showWithGravity(
+                    'Copiado',
+                    ToastAndroid.SHORT,
+                    ToastAndroid.TOP
+                )
             }
         },
         {
